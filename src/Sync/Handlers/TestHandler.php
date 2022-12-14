@@ -17,10 +17,10 @@ class TestHandler implements RequestHandlerInterface
         ]);*/
         $a = $request->getQueryParams()['first'];
         $b = $request->getQueryParams()['second'];
-        $a1 = json_decode($a, true);
-        $b1 = json_decode($b, true);
+        /*$a1 = json_decode($a, true);
+        $b1 = json_decode($b, true);*/
 
-        $sum = $a1 + $b1;
+        $sum = $a + $b;
 
         return new JsonResponse([$sum]);
     }
