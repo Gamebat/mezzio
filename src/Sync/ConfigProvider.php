@@ -35,7 +35,7 @@ class ConfigProvider
 
             ],
             'factories'  => [
-                Sync\Handlers\TestHandlers::class => Sync\Factories\TestHandlerFactory::class,
+                Sync\Handlers\TestHandler::class => Sync\Factories\TestHandlerFactory::class,
             ],
         ];
     }
