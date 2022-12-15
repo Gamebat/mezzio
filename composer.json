@@ -43,15 +43,17 @@
     },
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "amocrm/amocrm-api-library": "^0.12.3",
         "composer/package-versions-deprecated": "^1.11.99.5",
         "laminas/laminas-component-installer": "^2.8",
         "laminas/laminas-config-aggregator": "^1.9",
         "laminas/laminas-diactoros": "^2.17",
+        "laminas/laminas-servicemanager": "^3.17",
         "laminas/laminas-stdlib": "^3.13",
         "mezzio/mezzio": "^3.11",
+        "mezzio/mezzio-fastroute": "^3.6",
         "mezzio/mezzio-helpers": "^5.9",
-        "laminas/laminas-servicemanager": "^3.17",
-        "mezzio/mezzio-fastroute": "^3.6"
+        "squizlabs/php_codesniffer": "4.0.x-dev"
     },
     "require-dev": {
         "laminas/laminas-development-mode": "^3.8",
