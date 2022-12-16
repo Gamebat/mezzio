@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sync\Handlers;
 
+use AmoCRM\Filters\ContactsFilter;
 use AmoCRM\Models\AccountModel;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
@@ -20,7 +21,7 @@ class TestHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse(['name' => $this->takeCode()]);
+        return new JsonResponse([$this->takeCode()]);
         /*$a = $request->getQueryParams()['first'];
         $b = $request->getQueryParams()['second'];
 
@@ -30,11 +31,11 @@ class TestHandler implements RequestHandlerInterface
     }
 
 
-    public function takeCode(): string
+    public function takeCode()
     {
         $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
         $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-        $redirectUri = "https://7124-173-233-147-68.eu.ngrok.io/test";
+        $redirectUri = "https://ee08-173-233-147-68.eu.ngrok.io/test";
 
         $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
@@ -94,6 +95,11 @@ class TestHandler implements RequestHandlerInterface
                         'baseDomain' => $apiClient->getAccountBaseDomain(),
                     ]);
                 }
+                $apiClient
+                    ->setAccessToken($this->takeToken($accessToken))
+                    ->setAccountBaseDomain($apiClient->getAccountBaseDomain());
+                $account = $apiClient->account()->getCurrent( AccountModel::getAvailableWith());
+
             } catch (Exception $e) {
                 die((string)$e);
             }
@@ -107,15 +113,91 @@ class TestHandler implements RequestHandlerInterface
             $apiClient
                 ->setAccessToken($token)
                 ->setAccountBaseDomain($token->getResourceOwnerId());
-            $account = $apiClient->account()->getCurrent( AccountModel::getAvailableWith());
-            //var_dump($account->toArray());
 
-            return $account->getName();
+            /*$field = $apiClient->contacts()->get()->pluck('name');
+            foreach ($field as $id => $item)
+            {
+                $contacts[$id]['name'] = $item;
+            }*/
 
+            $field2 = $apiClient->contacts()->get()->pluck('custom_fields_values');
+            $collection = $apiClient->contacts()->get();
+
+            $result = [];
+
+            foreach ($collection as $id => $contact) {
+                $result[$id]['name'] = $contact->getName();
+            }
+
+            foreach ($collection as $id => $contact){
+                $field = $contact -> getCustomFieldsValues() -> getBy('field_code','EMAIL');
+
+                /*if ($field != null){
+
+                    $result[$id]['field'] = $field -> getValues();
+                }*/
+                if ($field != null)
+                {
+
+                    $email = $field -> getValues();
+                    foreach ($email as $key => $value)
+                    {
+                        foreach ($key[$value] as $ss => $item)
+                        {
+                            $result[]['test'] = $item;
+                            if ($key === 'value' || 1 == 1){
+                                $result[$id]['email'] = $item;
+                            }
+                        }
+                    }
+
+                }
+
+            }
+
+
+            /*foreach ($field2 as $id => $item)
+            {
+                $contacts[$id]['fields'] = $item;
+            }*/
+
+            //На крайний случай
+
+            /*$field = $apiClient->contacts()->get()->pluck('name');
+            foreach ($field as $id => $item)
+            {
+                $result[$id]['name'] = $item;
+            }
+            $field2 = $apiClient->contacts()->get()->pluck('custom_fields_values');
+            $find = 0;
+            foreach ($field2 as $id => $item)
+            {
+                //$contacts[$id]['first'] = $item;
+                foreach ($item[0] as $key => $value)
+                {
+                    if ($value === 'Email')
+                    {
+                        $find = 1;
+                    }
+                }
+                if ($find === 1)
+                {
+                    foreach ($item[0]['values'] as $key => $value)
+                    {
+                        foreach ($value as $key => $value)
+                        {
+                            if ($key === 'value')
+                            {
+                                $result[$id]['email'] = $value;
+                            }
+
+                        }
+                    }
+                }
+            }*/
+            return $result;
         }
-        $ownerDetails = $apiClient->getOAuthClient()->getResourceOwner($accessToken);
-
-        return $ownerDetails->getName();
+        return $contacts;
     }
 
     public function saveToken($array): void
