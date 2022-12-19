@@ -9,13 +9,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Sync\AmoAPI\Authorize;
 
-
 class UserEmailsHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([(new Authorize())->authorize()]);
     }
-
 
 }
