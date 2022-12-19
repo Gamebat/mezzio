@@ -6,8 +6,9 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
+use Sync\AmoAPI\CreateTokenFile;
 
-class GetName
+class Authorize
 {
     public function takeCode(): array
     {
@@ -20,7 +21,8 @@ class GetName
 
         try {
 
-            if ( !trim(file_get_contents('accessToken.json')) || !file_exists('accessToken.json')) {
+            if ((!file_exists('./accessToken.json')) || (empty(file_get_contents('./accessToken.json'))))
+            {
                 if (isset($_GET['referer'])) {
                     $apiClient->setAccountBaseDomain($_GET['referer']);
                 }
@@ -65,9 +67,11 @@ class GetName
                     ->getOAuthClient()
                     ->setBaseDomain($_GET['referer'])
                     ->getAccessTokenByCode($_GET['code']);
+                $apiClient
+                    ->setAccessToken($accessToken);
 
                 if (!$accessToken->hasExpired()) {
-                    $this->saveToken([
+                    (new CreateTokenFile())->saveToken([
                         'accessToken' => $accessToken->getToken(),
                         'refreshToken' => $accessToken->getRefreshToken(),
                         'expires' => $accessToken->getExpires(),
@@ -83,23 +87,7 @@ class GetName
                     ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
             }
 
-            $collection = $apiClient->contacts()->get();
-
-            foreach ($collection as $id => $contact)
-            {
-                $result[$id]['name'] = $contact->getName();
-            }
-
-            foreach ($collection as $id => $contact) {
-                $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
-
-                if ($field != null) {
-                    $email = $field->getValues();
-                    foreach ($email as $value) {
-                        $result[$id]['emails'][] = $value->getValue();
-                    }
-                }
-            }
+            $result = (new GetUsersEmails($apiClient))->getEmails();
 
         } catch (AmoCRMApiException $e) {
             die((string)$e);
@@ -108,20 +96,5 @@ class GetName
         }
 
         return $result;
-    }
-
-    public function saveToken($array): void
-    {
-        try {
-            file_put_contents('./accessToken.json', json_encode([
-                'access_token' => $array['accessToken'],
-                'resource_owner_id' => $array['baseDomain'],
-                'refresh_token' => $array['refreshToken'],
-                'expires_in' => $array['expires'],
-                'expires' => $array['expires'],
-            ], JSON_PRETTY_PRINT));
-        } catch (Exception $e) {
-            die("File 'accessToken.json' open Error");
-        }
     }
 }

@@ -7,14 +7,14 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\AmoAPI\GetName;
+use Sync\AmoAPI\Authorize;
 
 
 class TestHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([(new GetName())->takeCode()]);
+        return new JsonResponse([(new Authorize())->takeCode()]);
     }
 
 
