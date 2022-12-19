@@ -10,7 +10,7 @@ use Sync\AmoAPI\CreateTokenFile;
 
 class Authorize
 {
-    public function takeCode(): array
+    public function authorize(): array
     {
         session_start();
         $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
