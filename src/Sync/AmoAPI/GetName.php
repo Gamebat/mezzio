@@ -4,7 +4,6 @@ namespace Sync\AmoAPI;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
-use AmoCRM\Models\AccountModel;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
 
@@ -75,17 +74,31 @@ class GetName
                         'baseDomain' => $apiClient->getAccountBaseDomain(),
                     ]);
                 }
-                $ownerDetails = $apiClient->getOAuthClient()->getResourceOwner($accessToken);
-                $result['name'] = $ownerDetails->getName();
             } else {
-                $json = file_get_contents("accessToken.json");
+                $json = file_get_contents("./accessToken.json");
                 $array = json_decode($json, true);
 
                 $apiClient
                     ->setAccessToken(new AccessToken($array))
                     ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
-                $account = $apiClient->account()->getCurrent(AccountModel::getAvailableWith());
-                $result['name'] = $account->getName();
+            }
+
+            $collection = $apiClient->contacts()->get();
+
+            foreach ($collection as $id => $contact)
+            {
+                $result[$id]['name'] = $contact->getName();
+            }
+
+            foreach ($collection as $id => $contact) {
+                $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
+
+                if ($field != null) {
+                    $email = $field->getValues();
+                    foreach ($email as $value) {
+                        $result[$id]['emails'][] = $value->getValue();
+                    }
+                }
             }
 
         } catch (AmoCRMApiException $e) {
