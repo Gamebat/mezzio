@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sync\Handlers;
 
+use AmoCRM\Filters\ContactsFilter;
 use AmoCRM\Models\AccountModel;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
@@ -20,7 +21,7 @@ class TestHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse(['name' => $this->takeCode()]);
+        return new JsonResponse([$this->takeCode()]);
         /*$a = $request->getQueryParams()['first'];
         $b = $request->getQueryParams()['second'];
 
@@ -30,15 +31,15 @@ class TestHandler implements RequestHandlerInterface
     }
 
 
-    public function takeCode(): string
+    public function takeCode()
     {
         $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
         $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-        $redirectUri = "https://7124-173-233-147-68.eu.ngrok.io/test";
+        $redirectUri = "https://ef90-173-233-147-68.eu.ngrok.io/test";
 
         $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
-        if (trim(file_get_contents('accessToken.json')) == false) {
+        if (!file_get_contents('accessToken.json')) {
             if (isset($_GET['referer'])) {
                 $apiClient->setAccountBaseDomain($_GET['referer']);
             }
@@ -94,6 +95,11 @@ class TestHandler implements RequestHandlerInterface
                         'baseDomain' => $apiClient->getAccountBaseDomain(),
                     ]);
                 }
+                $apiClient
+                    ->setAccessToken($this->takeToken($accessToken))
+                    ->setAccountBaseDomain($apiClient->getAccountBaseDomain());
+                $account = $apiClient->account()->getCurrent( AccountModel::getAvailableWith());
+
             } catch (Exception $e) {
                 die((string)$e);
             }
@@ -107,15 +113,33 @@ class TestHandler implements RequestHandlerInterface
             $apiClient
                 ->setAccessToken($token)
                 ->setAccountBaseDomain($token->getResourceOwnerId());
-            $account = $apiClient->account()->getCurrent( AccountModel::getAvailableWith());
-            //var_dump($account->toArray());
 
-            return $account->getName();
 
         }
-        $ownerDetails = $apiClient->getOAuthClient()->getResourceOwner($accessToken);
+        $collection = $apiClient->contacts()->get();
 
-        return $ownerDetails->getName();
+        $result = [];
+
+        foreach ($collection as $id => $contact) {
+            $result[$id]['name'] = $contact->getName();
+        }
+
+        foreach ($collection as $id => $contact){
+            $field = $contact -> getCustomFieldsValues() -> getBy('field_code','EMAIL');
+
+            if ($field != null)
+            {
+                $email = $field -> getValues();
+                foreach ($email as $value)
+                {
+                    $result[$id]['emails'][] = $value->getValue();
+                }
+
+            }
+
+        }
+
+        return $result;
     }
 
     public function saveToken($array): void
