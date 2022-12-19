@@ -6,10 +6,13 @@ use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
-use Sync\AmoAPI\CreateTokenFile;
 
 class Authorize
 {
+    /**
+     * Авторизуемся в Kommo
+     * @return array
+     */
     public function authorize(): array
     {
         session_start();
@@ -17,7 +20,6 @@ class Authorize
         $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
         $redirectUri = "https://ef90-173-233-147-68.eu.ngrok.io/test";
         $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
-        $result = [];
 
         try {
 

@@ -10,11 +10,15 @@ class GetUsersEmails
 {
     public array $result;
     public AmoCRMApiClient $apiClient;
-    public function __construct($apiClient)
+    public function __construct(AmoCRMApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
     }
 
+    /**
+     * Получаем имена пользователей и их Email
+     * @return array
+     */
     public function getEmails(): array
     {
         try {

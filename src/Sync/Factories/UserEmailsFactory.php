@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Sync\Factories;
 
-use Sync\Handlers\UserEmailsHandler;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Sync\Handlers\UserEmailsHandler;
 
 class UserEmailsFactory
 {
@@ -15,4 +15,3 @@ class UserEmailsFactory
         return new UserEmailsHandler();
     }
 }
-

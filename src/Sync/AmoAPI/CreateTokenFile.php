@@ -6,15 +6,20 @@ use Exception;
 
 class CreateTokenFile
 {
-    public function saveToken($array): void
+    /**
+     * Сохраняем AccessToken в файл
+     * @param array $tokenArray
+     * @return void
+     */
+    public function saveToken(array $tokenArray): void
     {
         try {
             file_put_contents('./accessToken.json', json_encode([
-                'access_token' => $array['accessToken'],
-                'resource_owner_id' => $array['baseDomain'],
-                'refresh_token' => $array['refreshToken'],
-                'expires_in' => $array['expires'],
-                'expires' => $array['expires'],
+                'access_token' => $tokenArray['accessToken'],
+                'resource_owner_id' => $tokenArray['baseDomain'],
+                'refresh_token' => $tokenArray['refreshToken'],
+                'expires_in' => $tokenArray['expires'],
+                'expires' => $tokenArray['expires'],
             ], JSON_PRETTY_PRINT));
         } catch (Exception $e) {
             die("File 'accessToken.json' open Error");

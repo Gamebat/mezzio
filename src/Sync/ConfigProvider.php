@@ -39,9 +39,7 @@ class ConfigProvider
             ],
         ];
     }
-
     /**
      * Returns the templates configuration
      */
-
 }
