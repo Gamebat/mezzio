@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace App;
-use Sync\Handlers\TestHandler;
+use Sync\Handlers\UserEmailsHandler;
 
 /**
  * The configuration provider for the App module
