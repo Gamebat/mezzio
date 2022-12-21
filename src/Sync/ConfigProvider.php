@@ -36,6 +36,7 @@ class ConfigProvider
             ],
             'factories'  => [
                 Handlers\UserEmailsHandler::class => Factories\UserEmailsFactory::class,
+                Handlers\UnisenderContactHandler::class => Factories\UnisenderContactFactory::class,
             ],
         ];
     }

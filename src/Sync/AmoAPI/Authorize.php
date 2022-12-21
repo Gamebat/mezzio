@@ -18,7 +18,7 @@ class Authorize
         session_start();
         $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
         $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-        $redirectUri = "https://ef90-173-233-147-68.eu.ngrok.io/test";
+        $redirectUri = "https://963f-173-233-147-68.eu.ngrok.io/test";
         $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
         try {
