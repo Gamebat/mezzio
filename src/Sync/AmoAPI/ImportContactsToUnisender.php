@@ -20,39 +20,32 @@ class ImportContactsToUnisender
 
     private array $usersKommo;
 
-    private array $result;
     private array $contacts;
+    private array $blocks;
     public function __construct()
     {
         try {
-            if ((!file_exists('./accessToken.json')) || (empty(file_get_contents('./accessToken.json'))))
-            {
-                throw new Exception('Ошибка авторизации');
-            } else {
-                $json = file_get_contents("./accessToken.json");
-                $array = json_decode($json, true);
-            }
-            $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
-            $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-            $redirectUri = "https://0580-173-233-147-68.eu.ngrok.io/auth";
-            $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
-            $apiClient
-                ->setAccessToken(new AccessToken($array))
-                ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
-            $this->token = (include "./config/unisender_config.php")['uni_api_key'];
+            $params = (include "./config/api.config.php");
+            $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']))->generateApiClient();
+
+            $this->token = $params['uni_api_key'];
             $this->client = new UnisenderApi($this->token);
             $this->usersKommo = (new GetAllKommoUsers($apiClient))->getUsers();
         } catch (AmoCRMApiException|Exception $e){
             die($e->getMessage());
         }
     }
+
     /**
      * ?
-     * @param array $usersKommo
-     * @return string
+     * @return array
      */
     public function importContacts(): array
     {
+        $header = [
+            'field_names[0]' => 'email',
+            'field_names[1]' => 'Name'
+        ];
         $id = 0;
         foreach ($this->usersKommo as $key => $name)
         {
@@ -66,23 +59,18 @@ class ImportContactsToUnisender
 
                 }
         }
-
-        if ((count($this->contacts)) > 2)
+        $result = [];
+        $arrays = array_chunk($this->contacts, 500, true);
+        foreach ($arrays as $value)
         {
-            $number = intdiv((count($this->contacts)), 2);
-            $arrays = array_chunk($this->contacts, $number, true);
-            foreach ($arrays as $key => $value)
-            {
-                $value["field_names[0]"] = 'email';
-                $value["field_names[1]"] = 'Name';
-                $this->result[]=json_decode( $this->client->importContacts($value));
-            }
-        } else {
-            $this->contacts["field_names[0]"] = 'email';
-            $this->contacts["field_names[1]"] = 'Name';
-            $this->result[]=json_decode($this->client->importContacts($this->contacts));
+            $this->blocks[]=$value;
         }
 
-        return $this->result;
+        foreach ($this->blocks as $block){
+            $block  = array_merge($block, $header);
+            $result[]=json_decode($this->client->importContacts($block));
+        }
+
+        return $result;
     }
 }
