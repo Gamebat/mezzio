@@ -9,12 +9,6 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 class GetUsersEmails
 {
     public array $result;
-    public AmoCRMApiClient $apiClient;
-    public function __construct(AmoCRMApiClient $apiClient)
-    {
-        $this->apiClient = $apiClient;
-    }
-
     /**
      * Получаем имена пользователей и их Email
      * @return array
@@ -22,7 +16,10 @@ class GetUsersEmails
     public function getEmails(): array
     {
         try {
-            $collection = $this->apiClient->contacts()->get();
+            $params = (include "./config/api.config.php");
+            $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']
+            ))->generateApiClient();
+            $collection = $apiClient->contacts()->get();
 
             foreach ($collection as $id => $contact)
             {

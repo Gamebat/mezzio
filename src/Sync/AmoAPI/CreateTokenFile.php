@@ -18,7 +18,6 @@ class CreateTokenFile
                 'access_token' => $tokenArray['accessToken'],
                 'resource_owner_id' => $tokenArray['baseDomain'],
                 'refresh_token' => $tokenArray['refreshToken'],
-                'expires_in' => $tokenArray['expires'],
                 'expires' => $tokenArray['expires'],
             ], JSON_PRETTY_PRINT));
         } catch (Exception $e) {

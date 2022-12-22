@@ -16,7 +16,7 @@ class GetUnisenderContact
 
     public function __construct()
     {
-        $this->token = (include "./config/unisender_config.php")['uni_api_key'];
+        $this->token = (include "./config/api.config.php")['uni_api_key'];
         $this->client = new UnisenderApi($this->token);
     }
 

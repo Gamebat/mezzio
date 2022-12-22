@@ -7,13 +7,13 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\AmoAPI\Authorize;
+use Sync\AmoAPI\GetUsersEmails;
 
 class UserEmailsHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([(new Authorize())->authorize()]);
+        return new JsonResponse([(new GetUsersEmails())->getEmails()]);
     }
 
 }

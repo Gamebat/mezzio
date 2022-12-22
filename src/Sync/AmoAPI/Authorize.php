@@ -4,6 +4,7 @@ namespace Sync\AmoAPI;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
+use AmoCRM\Models\AccountModel;
 use Exception;
 use League\OAuth2\Client\Token\AccessToken;
 
@@ -16,10 +17,9 @@ class Authorize
     public function authorize(): string
     {
         session_start();
-        $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
-        $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-        $redirectUri = "https://0580-173-233-147-68.eu.ngrok.io/auth";
-        $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
+        $params = (include "./config/api.config.php");
+        $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']
+        ))->generateApiClient();
 
         try {
 
@@ -89,17 +89,15 @@ class Authorize
                     ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
             }
 
-            /*$result = (new GetUsersEmails($apiClient))->getEmails();*/
-
         } catch (AmoCRMApiException $e) {
             die((string)$e);
         } catch (Exception $e) {
             exit($e->getMessage());
         }
 
-        $_SESSION['apiClient'] = $apiClient;
-
-        /*return $result;*/
-        return 'success';
+        return $apiClient
+            ->account()
+            ->getCurrent( AccountModel::getAvailableWith())
+            ->getName();
     }
 }
