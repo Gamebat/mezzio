@@ -34,12 +34,14 @@ class GetUsersEmails
                     foreach ($email as $value) {
                         $this->result[$id]['emails'][] = $value->getValue();
                     }
+                } else {
+                    $this->result[$id]['emails'][] = null;
                 }
             }
         } catch (AmoCRMoAuthApiException $e){
             die('Ошибка авторизации');
         } catch (AmoCRMApiException $e){
-            die('Неверный токен авторизации');
+            die($e->getMessage());
         }
 
         return $this->result;
