@@ -11,14 +11,14 @@ class Authorize
 {
     /**
      * Авторизуемся в Kommo
-     * @return array
+     * @return string
      */
-    public function authorize(): array
+    public function authorize(): string
     {
         session_start();
         $clientId = "9c59de12-6982-4761-8967-c770ff9d544f";
         $clientSecret = "iwMJZLYZHrU7FUSbg0wHWSmkO3psJNGej7hVnwmGk2Djwh1DjDvV1s7tlgwdf4vB";
-        $redirectUri = "https://963f-173-233-147-68.eu.ngrok.io/test";
+        $redirectUri = "https://0580-173-233-147-68.eu.ngrok.io/auth";
         $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
         try {
@@ -89,7 +89,7 @@ class Authorize
                     ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
             }
 
-            $result = (new GetUsersEmails($apiClient))->getEmails();
+            /*$result = (new GetUsersEmails($apiClient))->getEmails();*/
 
         } catch (AmoCRMApiException $e) {
             die((string)$e);
@@ -97,6 +97,9 @@ class Authorize
             exit($e->getMessage());
         }
 
-        return $result;
+        $_SESSION['apiClient'] = $apiClient;
+
+        /*return $result;*/
+        return 'success';
     }
 }

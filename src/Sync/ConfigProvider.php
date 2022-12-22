@@ -38,6 +38,8 @@ class ConfigProvider
                 Handlers\UserEmailsHandler::class => Factories\UserEmailsFactory::class,
                 Handlers\UnisenderContactHandler::class => Factories\UnisenderContactFactory::class,
                 Handlers\UserKommoHandler::class => Factories\UserKommoFactory::class,
+                Handlers\AuthKommoHandler::class => Factories\AuthKommoFactory::class,
+                Handlers\SyncContactsHandler::class => Factories\SyncContactsFactory::class
             ],
         ];
     }
