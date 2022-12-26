@@ -21,18 +21,9 @@ class APIClient
      * Генерация API клиента
      * @return AmoCRMApiClient
      */
-    function generateApiClient()
+    function generateApiClient(): AmoCRMApiClient
     {
         $apiClient = new AmoCRMApiClient($this->clientId, $this->clientSecret, $this->redirectUri);
-        if ((file_exists('./accessToken.json')) && (!empty(file_get_contents('./accessToken.json'))))
-        {
-            $json = file_get_contents("./accessToken.json");
-            $array = json_decode($json, true);
-            $apiClient
-                ->setAccessToken(new AccessToken($array))
-                ->setAccountBaseDomain($array['base_domain']);
-        }
-
         return $apiClient;
     }
 }

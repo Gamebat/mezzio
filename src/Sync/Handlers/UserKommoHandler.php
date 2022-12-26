@@ -17,7 +17,6 @@ class UserKommoHandler implements RequestHandlerInterface
     {
         $params = (include "./config/api.config.php");
         $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']))->generateApiClient();
-
         return new JsonResponse([(new GetAllKommoUsers($apiClient))->getUsers()]);
     }
 }

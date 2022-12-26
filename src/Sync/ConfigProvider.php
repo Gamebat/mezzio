@@ -40,7 +40,6 @@ class ConfigProvider
                 Handlers\UserKommoHandler::class => Factories\UserKommoFactory::class,
                 Handlers\AuthKommoHandler::class => Factories\AuthKommoFactory::class,
                 Handlers\SyncContactsHandler::class => Factories\SyncContactsFactory::class,
-                Handlers\ClearSessionHandler::class => Factories\ClearSessionFactory::class,
             ],
         ];
     }
