@@ -8,9 +8,21 @@ use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 
 class GetAllKommoUsers
 {
+    /**
+     * @var array
+     */
     public array $result;
-    public int $idd = 0;
+
+    /**
+     * @var int
+     */
+    public int $id = 0;
+
+    /**
+     * @var AmoCRMApiClient
+     */
     public AmoCRMApiClient $apiClient;
+
     public function __construct(AmoCRMApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
@@ -25,17 +37,19 @@ class GetAllKommoUsers
         try {
             $collection = $this->apiClient->contacts()->get();
 
-            foreach ($collection as $id => $contact)
+            foreach ($collection as $contact)
             {
                 $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
 
-                if ($field != null) {
-                    $this->result[$this->idd]['name'] = $contact->getName();
+                if ($field != null)
+                {
+                    $this->result[$this->id]['name'] = $contact->getName();
                     $email = $field->getValues();
-                    foreach ($email as $value) {
-                        $this->result[$this->idd]['emails'][] = $value->getValue();
+                    foreach ($email as $value)
+                    {
+                        $this->result[$this->id]['emails'][] = $value->getValue();
                     }
-                    $this->idd++;
+                    $this->id++;
                 }
 
             }

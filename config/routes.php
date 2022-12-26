@@ -40,10 +40,8 @@ use Psr\Container\ContainerInterface;
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
-    $app->get('/test', Sync\Handlers\UserEmailsHandler::class, 'test');
+    $app->get('/email', Sync\Handlers\UserEmailsHandler::class, 'email');
     $app->get('/unisender', Sync\Handlers\UnisenderContactHandler::class, 'unisender');
     $app->get('/sync', Sync\Handlers\SyncContactsHandler::class, 'sync');
     $app->get('/auth', Sync\Handlers\AuthKommoHandler::class, 'auth');
-    $app->get('/add', Sync\Handlers\SaveAccountHandler::class, 'add');
-    $app->get('/clear', Sync\Handlers\ClearSessionHandler::class, 'clear');
 };

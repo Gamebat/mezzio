@@ -3,14 +3,25 @@
 namespace Sync\AmoAPI;
 
 use AmoCRM\Client\AmoCRMApiClient;
-use League\OAuth2\Client\Token\AccessToken;
 
 class APIClient
 {
+    /**
+     * @var string
+     */
     public string $clientId;
+
+    /**
+     * @var string
+     */
     public string $clientSecret;
+
+    /**
+     * @var string
+     */
     public string $redirectUri;
-    public function __construct($clientId, $clientSecret, $redirectUri)
+
+    public function __construct(string $clientId, string $clientSecret, string $redirectUri)
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
