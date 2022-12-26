@@ -12,8 +12,6 @@ class GetUnisenderContact
     /** @var string  */
     private string $token;
 
-    public array $result;
-
     public function __construct()
     {
         $this->token = (include "./config/api.config.php")['uni_api_key'];
@@ -21,32 +19,18 @@ class GetUnisenderContact
     }
 
     /**
-     * ?
+     * Получение контакта Unidender по почте
+     * через GET запрос
      * @param string $someData
      * @return string
      */
-    public function getterContact(array $usersKommo): string
+    public function getterContact(string $someData): string
     {
-        $id = 0;
-        foreach ($usersKommo as $key => $name){
-            foreach ($name as $key => $value)
-                if ($key == 'emails'){
-                    foreach ($value as $key => $value){
-                        $this->result["data[{$id}][0]"] = $name['name'];
-                        $this->result["data[{$id}][1]"] = $value;
-                        $id++;
-                    }
-
-                }
-
-        }
-        return $this->client->importContacts(
+        return $this->client->getContact(
             [
-                'field_names[0]' => 'email',
-                'field_names[1]' => 'name',
-                $this->result
+                'email' => $someData,
+                'include_fields' => 1
             ]
         );
-        /*return $someData;*/
     }
 }

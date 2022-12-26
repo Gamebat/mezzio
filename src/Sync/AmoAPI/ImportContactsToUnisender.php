@@ -8,19 +8,35 @@ use Unisender\ApiWrapper\UnisenderApi;
 
 class ImportContactsToUnisender
 {
-    /** @var UnisenderApi  */
+    /**
+     * @var UnisenderApi
+     */
     private UnisenderApi $client;
 
-    /** @var string  */
+    /**
+     * @var string
+     */
     private string $token;
 
+    /**
+     * @var array
+     */
     private array $usersKommo;
 
+    /**
+     * @var array
+     */
     private array $contacts;
+
+    /**
+     * @var array
+     */
     private array $blocks;
+
     public function __construct()
     {
-        try {
+        try
+        {
             $params = (include "./config/api.config.php");
             $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']))->generateApiClient();
 
@@ -33,7 +49,7 @@ class ImportContactsToUnisender
     }
 
     /**
-     * ?
+     * Синхронизация контактов Kommo с Unisender
      * @return array
      */
     public function importContacts(): array
@@ -43,24 +59,22 @@ class ImportContactsToUnisender
             'field_names[1]' => 'Name'
         ];
         $id = 0;
-        foreach ($this->usersKommo as $key => $name)
+        foreach ($this->usersKommo as $name)
         {
             foreach ($name as $key => $value)
-                if ($key == 'emails'){
-                    foreach ($value as $key => $value){
+            {
+                if ($key == 'emails') {
+                    foreach ($value as $email) {
                         $this->contacts["data[{$id}][1]"] = $name['name'];
-                        $this->contacts["data[{$id}][0]"] = $value;
+                        $this->contacts["data[{$id}][0]"] = $email;
                         $id++;
                     }
 
                 }
+            }
         }
         $result = [];
-        $arrays = array_chunk($this->contacts, 500, true);
-        foreach ($arrays as $value)
-        {
-            $this->blocks[]=$value;
-        }
+        $this->blocks = array_chunk($this->contacts, 500, true);
 
         foreach ($this->blocks as $block){
             $block  = array_merge($block, $header);

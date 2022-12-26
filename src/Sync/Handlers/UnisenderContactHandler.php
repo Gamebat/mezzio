@@ -13,7 +13,8 @@ class UnisenderContactHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([json_decode((new GetUnisenderContact())->getterContact($request->getQueryParams()['email']))]);
+        return new JsonResponse(json_decode((new GetUnisenderContact())
+            ->getterContact($request->getQueryParams()['email'])));
     }
 
 }
