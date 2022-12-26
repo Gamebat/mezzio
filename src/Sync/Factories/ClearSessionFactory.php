@@ -6,12 +6,12 @@ namespace Sync\Factories;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\Handlers\SyncContactsHandler;
+use Sync\Handlers\ClearSessionHandler;
 
-class SyncContactsFactory
+class ClearSessionFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        return new SyncContactsHandler();
+        return new ClearSessionHandler();
     }
 }

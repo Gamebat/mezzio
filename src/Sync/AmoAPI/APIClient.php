@@ -4,7 +4,6 @@ namespace Sync\AmoAPI;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use League\OAuth2\Client\Token\AccessToken;
-use PHPUnit\Util\Exception;
 
 class APIClient
 {
@@ -18,6 +17,10 @@ class APIClient
         $this->redirectUri = $redirectUri;
     }
 
+    /**
+     * Генерация API клиента
+     * @return AmoCRMApiClient
+     */
     function generateApiClient()
     {
         $apiClient = new AmoCRMApiClient($this->clientId, $this->clientSecret, $this->redirectUri);
@@ -27,7 +30,7 @@ class APIClient
             $array = json_decode($json, true);
             $apiClient
                 ->setAccessToken(new AccessToken($array))
-                ->setAccountBaseDomain((new AccessToken($array))->getResourceOwnerId());
+                ->setAccountBaseDomain($array['base_domain']);
         }
 
         return $apiClient;

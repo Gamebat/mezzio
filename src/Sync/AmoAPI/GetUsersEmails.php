@@ -2,7 +2,6 @@
 
 namespace Sync\AmoAPI;
 
-use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 

@@ -45,6 +45,10 @@
         "php": "^7.4 || ~8.0.0 || ~8.1.0",
         "amocrm/amocrm-api-library": "^0.12.3",
         "composer/package-versions-deprecated": "^1.11.99.5",
+        "davedevelopment/phpmig": "^1.7",
+        "hopex/simplog": "^1.0",
+        "illuminate/database": "^8.83",
+        "illuminate/events": "^8.83",
         "laminas/laminas-component-installer": "^2.8",
         "laminas/laminas-config-aggregator": "^1.9",
         "laminas/laminas-diactoros": "^2.17",
@@ -53,7 +57,9 @@
         "mezzio/mezzio": "^3.11",
         "mezzio/mezzio-fastroute": "^3.6",
         "mezzio/mezzio-helpers": "^5.9",
+        "pimple/pimple": "~3.0",
         "squizlabs/php_codesniffer": "4.0.x-dev",
+        "symfony/dotenv": "^5.4",
         "unisender/api-wrapper": "^1.5"
     },
     "require-dev": {
@@ -65,7 +71,9 @@
     },
     "autoload": {
         "psr-4": {
-            "Sync\\": "src/Sync/"
+            "Sync\\": "src/Sync/",
+            "Controllers\\": "app/controllers/",
+            "Models\\": "app/models/"
         }
     },
     "autoload-dev": {

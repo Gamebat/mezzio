@@ -16,7 +16,7 @@ class CreateTokenFile
         try {
             file_put_contents('./accessToken.json', json_encode([
                 'access_token' => $tokenArray['accessToken'],
-                'resource_owner_id' => $tokenArray['baseDomain'],
+                'base_domain' => $tokenArray['baseDomain'],
                 'refresh_token' => $tokenArray['refreshToken'],
                 'expires' => $tokenArray['expires'],
             ], JSON_PRETTY_PRINT));
