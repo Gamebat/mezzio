@@ -13,6 +13,10 @@ class AuthKommoHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse((new Authorize())->authorize());
+        if (!empty($request->getQueryParams()['name']) || !empty($request->getQueryParams()['code'])) {
+            return new JsonResponse((new Authorize())->authorize());
+        } else {
+            return new JsonResponse('Ошибка! Введите GET параметры!');
+        }
     }
 }

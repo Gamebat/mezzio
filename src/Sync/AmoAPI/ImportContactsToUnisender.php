@@ -2,13 +2,9 @@
 
 namespace Sync\AmoAPI;
 
-use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
-use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Util\Exception;
 use Unisender\ApiWrapper\UnisenderApi;
-use Sync\AmoAPI\GetAllKommoUsers;
-use Sync\AmoAPI\Authorize;
 
 class ImportContactsToUnisender
 {
