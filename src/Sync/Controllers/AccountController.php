@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Sync\Models\Account;
 
 
-class Controller
+class AccountController
 {
     /**
      * @var Account

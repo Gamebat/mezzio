@@ -4,7 +4,7 @@ namespace Sync\AmoAPI;
 
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
-use Sync\Controllers\Controller;
+use Sync\Controllers\AccountController;
 
 class Authorize
 {
@@ -23,11 +23,11 @@ class Authorize
                 $_SESSION['name'] = $_GET['name'];
             }
 
-            $account = (new Controller())->getAccountByName($_SESSION['name']);
+            $account = (new AccountController())->getAccountByName($_SESSION['name']);
 
-            if ((new Controller())->issetAccount($_SESSION['name']))
+            if ((new AccountController())->issetAccount($_SESSION['name']))
             {
-                return (new Controller())->getAccountByName($_SESSION['name'])->name;
+                return (new AccountController())->getAccountByName($_SESSION['name'])->name;
             }
 
             $params = (include "./config/api.config.php");
@@ -89,7 +89,7 @@ class Authorize
                 ->setAccessToken($accessToken);
 
             if (!$accessToken->hasExpired()) {
-                (new Controller())->saveAuth([
+                (new AccountController())->saveAuth([
                         'name' => $_SESSION['name'],
                         'token' => json_encode([
                             'access_token' => $accessToken->getToken(),
@@ -107,6 +107,6 @@ class Authorize
             exit($e->getMessage());
         }
 
-        return ((new Controller())->getAccountByName($_SESSION['name'])->name);
+        return ((new AccountController())->getAccountByName($_SESSION['name'])->name);
     }
 }
