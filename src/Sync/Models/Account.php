@@ -8,7 +8,8 @@ class Account extends Model
 {
     protected $fillable = [
         'name',
-        'token'
+        'kommo_token',
+        'unisender_api'
     ];
 
     /**

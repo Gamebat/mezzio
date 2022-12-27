@@ -14,7 +14,8 @@ class CreateAccountsTable extends Migration
         Capsule::schema()->create('accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->json('token');
+            $table->json('koomo_token');
+            $table->string('unisender_api')->nullable();
             $table->timestamps();
         });
     }
