@@ -91,7 +91,7 @@ class Authorize
             if (!$accessToken->hasExpired()) {
                 (new AccountController())->saveAuth([
                         'name' => $_SESSION['name'],
-                        'token' => json_encode([
+                        'kommo_token' => json_encode([
                             'access_token' => $accessToken->getToken(),
                             'refresh_token' => $accessToken->getRefreshToken(),
                             'expires' => $accessToken->getExpires(),

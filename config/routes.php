@@ -44,4 +44,5 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/unisender', Sync\Handlers\UnisenderContactHandler::class, 'unisender');
     $app->get('/sync', Sync\Handlers\SyncContactsHandler::class, 'sync');
     $app->get('/auth', Sync\Handlers\AuthKommoHandler::class, 'auth');
+    $app->route('/unikey', Sync\Handlers\GetUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
 };

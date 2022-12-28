@@ -59,4 +59,16 @@ class AccountController
     {
         return $this->accountModel->create($tokenArray);
     }
+
+    /**
+     * Сохранение api-ключа в таблицу БД
+     * @param array $postArray
+     * @return Account
+     */
+    public function saveUniToken(array $postArray): Account
+    {
+        $this->accountModel = Account::where('name', $postArray['Uname'])->first();
+        $this->accountModel->unisender_api = $postArray['token'];
+        return $this->accountModel->save();
+    }
 }
