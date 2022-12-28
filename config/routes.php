@@ -41,8 +41,10 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->get('/email', Sync\Handlers\UserEmailsHandler::class, 'email');
+    $app->get('/users', Sync\Handlers\UserKommoHandler::class, 'users');
     $app->get('/unisender', Sync\Handlers\UnisenderContactHandler::class, 'unisender');
     $app->get('/sync', Sync\Handlers\SyncContactsHandler::class, 'sync');
     $app->get('/auth', Sync\Handlers\AuthKommoHandler::class, 'auth');
-    $app->route('/unikey', Sync\Handlers\GetUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
+    $app->route('/unikey', Sync\Handlers\SaveUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
+    $app->route('/webhooks', Sync\Handlers\WebhookProcessingHandler::class, ['GET', 'POST'], 'webhooks');
 };

@@ -40,7 +40,8 @@ class ConfigProvider
                 Handlers\UserKommoHandler::class => Factories\UserKommoFactory::class,
                 Handlers\AuthKommoHandler::class => Factories\AuthKommoFactory::class,
                 Handlers\SyncContactsHandler::class => Factories\SyncContactsFactory::class,
-                Handlers\GetUnisederAPIHandler::class => Factories\GetUnisenderAPIFactory::class,
+                Handlers\SaveUnisederAPIHandler::class => Factories\SaveUnisenderAPIFactory::class,
+                Handlers\WebhookProcessingHandler::class => Factories\WebhookProcessingFactory::class,
             ],
         ];
     }

@@ -1,9 +1,13 @@
 <?php
 
-namespace Sync\AmoAPI;
+namespace Sync\Unisender;
 
 use AmoCRM\Exceptions\AmoCRMApiException;
 use PHPUnit\Util\Exception;
+use Sync\AmoAPI\APIClient;
+use Sync\AmoAPI\GetAllKommoUsers;
+use Sync\Controllers\AccountController;
+use Sync\Controllers\ContactController;
 use Unisender\ApiWrapper\UnisenderApi;
 
 class ImportContactsToUnisender
@@ -33,16 +37,18 @@ class ImportContactsToUnisender
      */
     private array $blocks;
 
-    public function __construct()
+    private array $toDatabase;
+
+    public function __construct($name)
     {
         try
         {
-            $params = (include "./config/api.config.php");
-            $apiClient = (new APIClient($params['clientId'], $params['clientSecret'], $params['redirectUri']))->generateApiClient();
+            $apiClient = (new APIClient())->generateApiClient($name);
 
-            $this->token = $params['uni_api_key'];
+            $this->token = (new AccountController())->takeUniToken($name);
             $this->client = new UnisenderApi($this->token);
             $this->usersKommo = (new GetAllKommoUsers($apiClient))->getUsers();
+
         } catch (AmoCRMApiException|Exception $e){
             die($e->getMessage());
         }
@@ -63,11 +69,18 @@ class ImportContactsToUnisender
         {
             foreach ($name as $key => $value)
             {
-                if ($key == 'emails') {
-                    foreach ($value as $email) {
+                if ($key == 'emails')
+                {
+                    foreach ($value as $email)
+                    {
+                        $this->toDatabase[$email] = [
+                            'name' => $name['name'],
+                            'contact_id' => $name['id']
+                        ];
                         $this->contacts["data[{$id}][1]"] = $name['name'];
                         $this->contacts["data[{$id}][0]"] = $email;
                         $id++;
+
                     }
 
                 }
@@ -78,7 +91,26 @@ class ImportContactsToUnisender
 
         foreach ($this->blocks as $block){
             $block  = array_merge($block, $header);
-            $result[]=json_decode($this->client->importContacts($block));
+            $inserted = json_decode($this->client->importContacts($block),true);
+            if ((count($inserted['result']['log']))!=0)
+            {
+                foreach ($inserted['result']['log'] as $value)
+                {
+                    $index = $value['index'];
+                    $unseted = $block["data[{$index}][0]"];
+                    unset($this->toDatabase[$unseted]);
+                }
+            }
+
+            foreach ($this->toDatabase as $key => $value){
+                (new ContactController())->saveContact([
+                    'contact_id' => $value['contact_id'],
+                    'name' => $value['name'],
+                    'email' => $key
+                ]);
+            }
+
+            $result[]= $inserted;
         }
 
         return $result;

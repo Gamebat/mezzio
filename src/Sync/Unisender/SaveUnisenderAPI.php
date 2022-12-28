@@ -6,7 +6,7 @@ use Hopex\Simplog\Logger;
 use Sync\Controllers\AccountController;
 use Sync\models\Account;
 
-class GetUnisenderAPI
+class SaveUnisenderAPI
 {
     /**
      * Сохранение api-ключа Unisender
@@ -14,7 +14,7 @@ class GetUnisenderAPI
      * @param $postArray
      * @return Account|null
      */
-    function saveUnisenderApi(array $parsedBodyArray): ?Account
+    function saveApi(array $parsedBodyArray): ?Account
     {
         if (((new AccountController())->issetAccount($parsedBodyArray['Uname'])) === true)
         {
