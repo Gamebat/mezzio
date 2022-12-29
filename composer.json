@@ -57,17 +57,19 @@
         "mezzio/mezzio": "^3.11",
         "mezzio/mezzio-fastroute": "^3.6",
         "mezzio/mezzio-helpers": "^5.9",
+        "nesbot/carbon": "^2.64",
         "pimple/pimple": "~3.0",
         "squizlabs/php_codesniffer": "4.0.x-dev",
         "symfony/dotenv": "^5.4",
         "unisender/api-wrapper": "^1.5"
     },
     "require-dev": {
+        "filp/whoops": "^2.14.6",
+        "laminas/laminas-cli": "^1.5",
         "laminas/laminas-development-mode": "^3.8",
         "mezzio/mezzio-tooling": "^2.6",
         "phpunit/phpunit": "^9.5.27",
-        "roave/security-advisories": "dev-master",
-        "filp/whoops": "^2.14.6"
+        "roave/security-advisories": "dev-master"
     },
     "autoload": {
         "psr-4": {

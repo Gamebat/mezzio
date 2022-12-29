@@ -2,9 +2,7 @@
 
 namespace Sync\Controllers;
 
-use Hopex\Simplog\Logger;
 use Illuminate\Database\Capsule\Manager as Capsule;
-use Sync\models\Account;
 use Sync\Models\Contact;
 
 
@@ -14,6 +12,7 @@ class ContactController
      * @var Contact
      */
     private Contact $contactModel;
+
     public function __construct()
     {
         $this->contactModel = new Contact();
@@ -27,46 +26,42 @@ class ContactController
         return $capsule;
     }
 
+    /**
+     * Сохранение контакта в таблицу БД
+     * @param array $contactArray
+     * @return Contact
+     */
     public function saveContact(array $contactArray): Contact
     {
         return $this->contactModel->create($contactArray);
     }
 
-    public function updateContact(array $updateArray)
-    {
-        $contact = Contact::where('name', $updateArray['name'])->first();
-        $contact->name = 'Paris to London';
-        $contact->email = 'Paris to London';
-        $contact->save();
-    }
-
-    public function deleteContactDB(array $emails)
+    /**
+     * Удаление контакта из таблицы БД
+     * @param array $emails
+     * @return void
+     */
+    public function deleteContactDB(array $emails): array
     {
         foreach ($emails as $email)
         {
-            $deleted = Contact::where('email', $email)->delete();
+           return Contact::where('email', $email)->delete();
         }
     }
 
-    public function getContact($id)
+    /**
+     * Получение всех Email контакта
+     * @param int $id
+     * @return array
+     */
+    public function getContact(int $id): array
     {
-        (new Logger())
-            ->setLevel('users')
-            ->putData($id, 'ids');
-
         $this->accountModel = Contact::where('contact_id', (int)$id)->get()->toArray();
-
-        (new Logger())
-            ->setLevel('users')
-            ->putData($this->accountModel, 'contacts');
 
         foreach ($this->accountModel as $account)
         {
             $result[]= $account['email'];
         }
-        (new Logger())
-            ->setLevel('users')
-            ->putData($result, 'emails');
 
         return $result;
     }

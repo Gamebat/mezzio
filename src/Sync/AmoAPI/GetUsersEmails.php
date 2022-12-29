@@ -2,11 +2,17 @@
 
 namespace Sync\AmoAPI;
 
+use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 
 class GetUsersEmails
 {
+    /**
+     * @var AmoCRMApiClient
+     */
+    public AmoCRMApiClient $apiClient;
+
     /**
      * @var array
      */
@@ -16,16 +22,17 @@ class GetUsersEmails
      * Получаем имена пользователей и их Email
      * @return array
      */
+
+    public function __construct($name)
+    {
+        $this->apiClient = (new APIClient())->generateApiClient($name);
+    }
+
     public function getEmails(): array
     {
-        try {
-            $params = (include "./config/api.config.php");
-            $apiClient = (new APIClient(
-                $params['clientId'],
-                $params['clientSecret'],
-                $params['redirectUri']
-            ))->generateApiClient();
-            $collection = $apiClient->contacts()->get();
+        try
+        {
+            $collection = $this->apiClient->contacts()->get();
 
             foreach ($collection as $id => $contact)
             {

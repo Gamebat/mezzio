@@ -14,7 +14,7 @@ class Authorize
      * Авторизуемся в Kommo
      * @return string
      */
-    public function authorize()
+    public function authorize(): string
     {
         session_start();
 
@@ -29,7 +29,11 @@ class Authorize
 
             if ((new AccountController())->issetAccount($_SESSION['name']))
             {
-                return (new AccountController())->getAccountByName($_SESSION['name'])->name;
+                $account = (new AccountController())->getAccountByName($_SESSION['name']);
+                if ($account->kommo_token)
+                {
+                    return $account->name;
+                }
             }
 
             $params = (include "./config/api.config.php");

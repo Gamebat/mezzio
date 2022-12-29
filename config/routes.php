@@ -44,7 +44,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/users', Sync\Handlers\UserKommoHandler::class, 'users');
     $app->get('/unisender', Sync\Handlers\UnisenderContactHandler::class, 'unisender');
     $app->get('/sync', Sync\Handlers\SyncContactsHandler::class, 'sync');
-    $app->get('/auth', Sync\Handlers\AuthKommoHandler::class, 'auth');
+    $app->route('/auth', Sync\Handlers\AuthKommoHandler::class, ['GET', 'POST'], 'auth');
     $app->route('/unikey', Sync\Handlers\SaveUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
-    $app->route('/webhooks', Sync\Handlers\WebhookProcessingHandler::class, ['GET', 'POST'], 'webhooks');
+    $app->post('/webhooks', Sync\Handlers\WebhookProcessingHandler::class, 'webhooks');
 };
