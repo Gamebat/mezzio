@@ -123,7 +123,6 @@ class ImportOnAction
     {
         try
         {
-
             $emails = (new ContactController())->getContact($this->usersKommo[0]);
             $header = [
                 'field_names[0]' => 'email',

@@ -21,10 +21,19 @@ class ConfigProvider
     public function __invoke(): array
     {
         return [
+            'laminas-cli' => $this->getCliConfig(),
             'dependencies' => $this->getDependencies(),
         ];
     }
 
+    public function getCliConfig() : array
+    {
+        return [
+            'commands' => [
+                'package:command-name' => Laminas\MyCommand::class,
+            ],
+        ];
+    }
     /**
      * Returns the container dependencies
      */

@@ -49,8 +49,11 @@ class ImportContactsToUnisender
             $this->token = (new AccountController())->takeUniToken($name);
             $this->client = new UnisenderApi($this->token);
             $this->usersKommo = (new GetAllKommoUsers($apiClient))->getUsers();
-
         } catch (AmoCRMApiException|Exception $e){
+
+            (new Logger())
+                ->setLevel('errors')
+                ->putData($e->getMessage(), 'import');
             die($e->getMessage());
         }
     }
@@ -104,7 +107,6 @@ class ImportContactsToUnisender
                     (new Logger())
                         ->setLevel('errors')
                         ->putData([$unsetedName => $unseted], 'unsyncEmails');
-
 
                     unset($this->toDatabase[$unseted]);
                 }

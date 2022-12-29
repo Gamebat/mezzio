@@ -13,7 +13,8 @@ class SyncContactsHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (!isset($request->getQueryParams()['name'])){
+        if (!isset($request->getQueryParams()['name']))
+        {
             return new JsonResponse ("Введите имя в GET параметры");
         }
         return new JsonResponse((new ImportContactsToUnisender($request->getQueryParams()['name']))->importContacts());

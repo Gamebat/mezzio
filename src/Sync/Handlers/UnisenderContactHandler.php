@@ -16,5 +16,4 @@ class UnisenderContactHandler implements RequestHandlerInterface
         return new JsonResponse(json_decode((new GetUnisenderContact())
             ->getterContact($request->getQueryParams()['email'])));
     }
-
 }

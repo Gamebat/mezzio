@@ -13,7 +13,10 @@ class UserEmailsHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([(new GetUsersEmails())->getEmails()]);
+        if (!isset($request->getQueryParams()['name']))
+        {
+            return new JsonResponse ("Введите имя в GET параметры");
+        }
+        return new JsonResponse([(new GetUsersEmails($request->getQueryParams()['name']))->getEmails()]);
     }
-
 }

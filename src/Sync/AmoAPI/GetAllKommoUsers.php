@@ -13,7 +13,6 @@ class GetAllKommoUsers
      * @var array
      */
     public array $result;
-    public array $asd;
 
     /**
      * @var int
@@ -34,18 +33,16 @@ class GetAllKommoUsers
      * Получаем имена пользователей и их Email
      * @return array
      */
-    public function getUsers()
+    public function getUsers(): array
     {
-        try {
+        try
+        {
             $collection = $this->apiClient->contacts()->get();
-
             foreach ($collection as $contact)
             {
-
                 if ((($contact->getCustomFieldsValues()) !== null) && ($contact->getName()) !== null)
                 {
                     $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
-
                     $emails = $field->getValues();
                     if(($emails->isEmpty()) !== true)
                     {
@@ -62,7 +59,7 @@ class GetAllKommoUsers
 
                             if ($email['enum_code'] === 'WORK')
                             {
-                            $this->result[$this->id]['emails'][] = $value->getValue();
+                                $this->result[$this->id]['emails'][] = $value->getValue();
                             } else{
                                 (new Logger())
                                     ->setLevel('errors')
@@ -75,10 +72,10 @@ class GetAllKommoUsers
                 }
 
             }
-        } catch (AmoCRMoAuthApiException $e){
-            die('Ошибка авторизации');
-        } catch (AmoCRMApiException $e){
-            die($e->getMessage());
+        } catch (AmoCRMoAuthApiException|AmoCRMApiException $e){
+            (new Logger())
+                ->setLevel('errors')
+                ->putData($e->getMessage(), 'get_users');
         }
 
         return $this->result;

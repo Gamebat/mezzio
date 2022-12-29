@@ -2,6 +2,7 @@
 
 namespace Sync\Controllers;
 
+use Hopex\Simplog\Logger;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Sync\Models\Account;
 
@@ -12,6 +13,7 @@ class AccountController
      * @var Account
      */
     private ?Account $accountModel;
+
     public function __construct()
     {
         $this->accountModel = new Account();
@@ -55,9 +57,16 @@ class AccountController
      * @param array $tokenArray
      * @return Account
      */
-    public function saveAuth(array $tokenArray): Account
+    public function saveAuth(array $tokenArray): void
     {
-        return $this->accountModel->create($tokenArray);
+        if ($this->issetAccount($tokenArray['name']))
+        {
+            $this->accountModel = Account::where('name', $tokenArray['name'])->first();
+            $this->accountModel->kommo_token = $tokenArray['kommo_token'];
+            $this->accountModel->save();
+        } else {
+            $this->accountModel->create($tokenArray);
+        }
     }
 
     /**
@@ -72,16 +81,44 @@ class AccountController
         return $this->accountModel->save();
     }
 
-    public function takeUniToken($name)
+    /**
+     * Получение Unisender токена
+     * @param string $name
+     * @return string
+     */
+    public function takeUniToken(string $name): string
     {
         $this->accountModel = Account::where('name', $name)->first();
         return $this->accountModel->unisender_api;
     }
 
-    public function takeKommoToken($name)
+    /**
+     * Получение Kommo токена
+     * @param string $name
+     * @return array
+     */
+    public function takeKommoToken(string $name): string
     {
-        $this->accountModel = Account::where('name', $name)->first();
-        return $this->accountModel->kommo_token;
+        try {
+            $this->accountModel = Account::where('name', $name)->first();
+            return $this->accountModel->kommo_token;
+        } catch (\Exception $e) {
+            (new Logger())
+                ->setLevel('errors')
+                ->putData($e->getMessage(), 'import');
+            die('Пользователь не найден');
+        }
     }
 
+    /**
+     * Удаление Kommo токена у пользователя
+     * @param string $name
+     * @return void
+     */
+    public function deleteKommoToken(string $name): void
+    {
+        $account = Account::where('name', $name)->first();
+        $account->kommo_token = null;
+        $account->save();
+    }
 }
