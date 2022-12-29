@@ -7,7 +7,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\AmoAPI\SaveUnisenderAPI;
+use Sync\Unisender\SaveUnisenderAPI;
 
 class SaveUnisederAPIHandler implements RequestHandlerInterface
 {

@@ -11,7 +11,7 @@ class AccountController
     /**
      * @var Account
      */
-    private Account $accountModel;
+    private ?Account $accountModel;
     public function __construct()
     {
         $this->accountModel = new Account();

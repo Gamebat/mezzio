@@ -6,7 +6,12 @@ use AmoCRM\Models\WebhookModel;
 
 class SubscribeWebhook
 {
-    public function subscribe($apiClient)
+    /**
+     * Подпись аккаунта на события Webhooks
+     * @param $apiClient
+     * @return array
+     */
+    public function subscribe($apiClient): array
     {
         $webHookModel = (new WebhookModel())
             ->setSettings([

@@ -3,6 +3,7 @@
 namespace Sync\Unisender;
 
 use AmoCRM\Exceptions\AmoCRMApiException;
+use Hopex\Simplog\Logger;
 use PHPUnit\Util\Exception;
 use Sync\AmoAPI\APIClient;
 use Sync\AmoAPI\GetAllKommoUsers;
@@ -98,6 +99,13 @@ class ImportContactsToUnisender
                 {
                     $index = $value['index'];
                     $unseted = $block["data[{$index}][0]"];
+                    $unsetedName = $block["data[{$index}][1]"];
+
+                    (new Logger())
+                        ->setLevel('errors')
+                        ->putData([$unsetedName => $unseted], 'unsyncEmails');
+
+
                     unset($this->toDatabase[$unseted]);
                 }
             }

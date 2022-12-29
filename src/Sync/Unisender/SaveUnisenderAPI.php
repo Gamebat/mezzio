@@ -1,17 +1,17 @@
 <?php
 
-namespace Sync\AmoAPI;
+namespace Sync\Unisender;
 
 use Hopex\Simplog\Logger;
 use Sync\Controllers\AccountController;
-use Sync\models\Account;
+use Sync\Models\Account;
 
 class SaveUnisenderAPI
 {
     /**
      * Сохранение api-ключа Unisender
      * в таблицу БД по имени пользователя
-     * @param $postArray
+     * @param array $parsedBodyArray
      * @return Account|null
      */
     function saveApi(array $parsedBodyArray): ?Account

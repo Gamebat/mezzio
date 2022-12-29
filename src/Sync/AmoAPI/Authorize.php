@@ -2,6 +2,7 @@
 
 namespace Sync\AmoAPI;
 
+use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
 use Hopex\Simplog\Logger;
@@ -32,11 +33,10 @@ class Authorize
             }
 
             $params = (include "./config/api.config.php");
-            $apiClient = (new APIClient(
+            $apiClient = (new AmoCRMApiClient(
                 $params['clientId'],
                 $params['clientSecret'],
-                $params['redirectUri']
-            ))->generateApiClient();
+                $params['redirectUri']));
 
             if (isset($_GET['referer']))
             {

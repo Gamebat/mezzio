@@ -3,36 +3,32 @@
 namespace Sync\AmoAPI;
 
 use Hopex\Simplog\Logger;
-use Sync\Unisender\AddContact;
-use Sync\Unisender\DeleteContact;
-use Sync\Unisender\UpdateContact;
+use Sync\Unisender\ContactAction;
 
 class WebhookProcessing
 {
-    function process(array $parsedBodyArray)
+    /**
+     * Вызываем событие (добавление, удаление или обновление)
+     * в зависимости от пришедшего тела
+     * @param array $parsedBodyArray
+     * @return void
+     */
+    function process(array $parsedBodyArray): void
     {
-        try {
+        try
+        {
             if (isset($parsedBodyArray['contacts']['update']))
             {
-                (new Logger())
-                    ->setLevel('webhooks')
-                    ->putData($parsedBodyArray, 'update');
-
-                (new UpdateContact())->update($parsedBodyArray['contacts']['update']);
+                (new ContactAction())->update($parsedBodyArray['contacts']['update']);
             } else if (isset($parsedBodyArray['contacts']['add'])) {
-                (new AddContact())->add($parsedBodyArray['contacts']['add']);
+                (new ContactAction())->add($parsedBodyArray['contacts']['add']);
             } else if (isset($parsedBodyArray['contacts']['delete'])) {
-                (new DeleteContact())->delete($parsedBodyArray['contacts']['delete']);
+                (new ContactAction())->delete($parsedBodyArray['contacts']['delete']);
             }
         } catch (\Exception $e){
             (new Logger())
                 ->setLevel('errors')
-                ->putData($e->getMessage(), 'exception');
+                ->putData($e->getMessage(), 'webhook_processing');
         }
-
-        (new Logger())
-            ->setLevel('requests')
-            ->putData($parsedBodyArray, 'webhooks');
-        return $parsedBodyArray;
     }
 }

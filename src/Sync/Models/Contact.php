@@ -8,15 +8,7 @@ class Contact extends Model
 {
     protected $fillable = [
         'name',
-        'email'
+        'email',
+        'contact_id'
     ];
-
-    /**
-     * Получаем baseDomain
-     * @return string
-     */
-    public function getDomainAttribute(): string
-    {
-        return (json_decode($this->token))->baseDomain;
-    }
 }

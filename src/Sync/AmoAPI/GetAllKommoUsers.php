@@ -5,7 +5,7 @@ namespace Sync\AmoAPI;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use function PHPUnit\Framework\isEmpty;
+use Hopex\Simplog\Logger;
 
 class GetAllKommoUsers
 {
@@ -46,17 +46,27 @@ class GetAllKommoUsers
                 {
                     $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
 
-
-                    $email = $field->getValues();
-                    if(($email->isEmpty()) !== true)
+                    $emails = $field->getValues();
+                    if(($emails->isEmpty()) !== true)
                     {
                         $this->result[$this->id]['name'] = $contact->getName();
                         $this->result[$this->id]['id'] = $contact->getId();
 
-                        foreach ($email as $value)
+                        foreach ($emails as $value)
                         {
-                            if (($value->getValue()) !== ''){
-                                $this->result[$this->id]['emails'][] = $value->getValue();
+                            $email = $value->toArray();
+
+                            (new Logger())
+                                ->setLevel('import')
+                                ->putData($email, 'sendedEmail');
+
+                            if ($email['enum_code'] === 'WORK')
+                            {
+                            $this->result[$this->id]['emails'][] = $value->getValue();
+                            } else{
+                                (new Logger())
+                                    ->setLevel('errors')
+                                    ->putData([$contact->getName() => $value->getValue()], 'unsyncEmails');
                             }
 
                         }
