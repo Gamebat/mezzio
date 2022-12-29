@@ -7,12 +7,15 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\AmoAPI\ImportContactsToUnisender;
+use Sync\Unisender\ImportContactsToUnisender;
 
 class SyncContactsHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse((new ImportContactsToUnisender())->importContacts());
+        if (!isset($request->getQueryParams()['name'])){
+            return new JsonResponse ("Введите имя в GET параметры");
+        }
+        return new JsonResponse((new ImportContactsToUnisender($request->getQueryParams()['name']))->importContacts());
     }
 }

@@ -5,6 +5,7 @@ namespace Sync\AmoAPI;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use Hopex\Simplog\Logger;
 
 class GetAllKommoUsers
 {
@@ -12,6 +13,7 @@ class GetAllKommoUsers
      * @var array
      */
     public array $result;
+    public array $asd;
 
     /**
      * @var int
@@ -23,7 +25,7 @@ class GetAllKommoUsers
      */
     public AmoCRMApiClient $apiClient;
 
-    public function __construct(AmoCRMApiClient $apiClient)
+    public function __construct($apiClient)
     {
         $this->apiClient = $apiClient;
     }
@@ -32,24 +34,44 @@ class GetAllKommoUsers
      * Получаем имена пользователей и их Email
      * @return array
      */
-    public function getUsers(): array
+    public function getUsers()
     {
         try {
             $collection = $this->apiClient->contacts()->get();
 
             foreach ($collection as $contact)
             {
-                $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
 
-                if ($field != null)
+                if ((($contact->getCustomFieldsValues()) !== null) && ($contact->getName()) !== null)
                 {
-                    $this->result[$this->id]['name'] = $contact->getName();
-                    $email = $field->getValues();
-                    foreach ($email as $value)
+                    $field = $contact->getCustomFieldsValues()->getBy('field_code', 'EMAIL');
+
+                    $emails = $field->getValues();
+                    if(($emails->isEmpty()) !== true)
                     {
-                        $this->result[$this->id]['emails'][] = $value->getValue();
+                        $this->result[$this->id]['name'] = $contact->getName();
+                        $this->result[$this->id]['id'] = $contact->getId();
+
+                        foreach ($emails as $value)
+                        {
+                            $email = $value->toArray();
+
+                            (new Logger())
+                                ->setLevel('import')
+                                ->putData($email, 'sendedEmail');
+
+                            if ($email['enum_code'] === 'WORK')
+                            {
+                            $this->result[$this->id]['emails'][] = $value->getValue();
+                            } else{
+                                (new Logger())
+                                    ->setLevel('errors')
+                                    ->putData([$contact->getName() => $value->getValue()], 'unsyncEmails');
+                            }
+
+                        }
+                        $this->id++;
                     }
-                    $this->id++;
                 }
 
             }

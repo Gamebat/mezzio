@@ -2,8 +2,10 @@
 
 namespace Sync\AmoAPI;
 
+use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
+use Hopex\Simplog\Logger;
 use Sync\Controllers\AccountController;
 
 class Authorize
@@ -12,7 +14,7 @@ class Authorize
      * Авторизуемся в Kommo
      * @return string
      */
-    public function authorize(): string
+    public function authorize()
     {
         session_start();
 
@@ -31,11 +33,10 @@ class Authorize
             }
 
             $params = (include "./config/api.config.php");
-            $apiClient = (new APIClient(
+            $apiClient = (new AmoCRMApiClient(
                 $params['clientId'],
                 $params['clientSecret'],
-                $params['redirectUri']
-            ))->generateApiClient();
+                $params['redirectUri']));
 
             if (isset($_GET['referer']))
             {
@@ -100,6 +101,9 @@ class Authorize
                     ]
                 );
             }
+            (new Logger())
+                ->setLevel('subscribe')
+                ->putData((new SubscribeWebhook())->subscribe($apiClient), 'response');
 
         } catch (AmoCRMApiException $e) {
             die((string)$e);

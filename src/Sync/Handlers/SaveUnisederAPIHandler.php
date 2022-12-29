@@ -1,19 +1,18 @@
 <?php
-
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace Sync\Handlers;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function time;
+use Sync\Unisender\SaveUnisenderAPI;
 
-class PingHandler implements RequestHandlerInterface
+class SaveUnisederAPIHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse(['ack' => time()]);
+        return new JsonResponse((new SaveUnisenderAPI())->saveApi($request->getParsedBody()));
     }
 }

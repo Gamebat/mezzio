@@ -6,13 +6,12 @@ namespace Sync\Factories;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\Handlers\AuthKommoHandler;
-use Sync\Handlers\GetUnisederAPIHandler;
+use Sync\Handlers\WebhookProcessingHandler;
 
-class GetUnisenderAPIFactory
+class WebhookProcessingFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        return new GetUnisederAPIHandler();
+        return new WebhookProcessingHandler();
     }
 }

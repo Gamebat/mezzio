@@ -6,3 +6,4 @@
 /vendor/
 accessToken.json
 .env
+/logs

@@ -7,13 +7,12 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\AmoAPI\Authorize;
-use Sync\AmoAPI\GetUnisenderAPI;
+use Sync\AmoAPI\WebhookProcessing;
 
-class GetUnisederAPIHandler implements RequestHandlerInterface
+class WebhookProcessingHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse((new GetUnisenderAPI())->saveUnisenderApi($request->getParsedBody()));
+        return new JsonResponse((new WebhookProcessing())->process($request->getParsedBody()));
     }
 }

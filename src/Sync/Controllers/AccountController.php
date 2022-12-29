@@ -11,7 +11,7 @@ class AccountController
     /**
      * @var Account
      */
-    private Account $accountModel;
+    private ?Account $accountModel;
     public function __construct()
     {
         $this->accountModel = new Account();
@@ -71,4 +71,17 @@ class AccountController
         $this->accountModel->unisender_api = $postArray['token'];
         return $this->accountModel->save();
     }
+
+    public function takeUniToken($name)
+    {
+        $this->accountModel = Account::where('name', $name)->first();
+        return $this->accountModel->unisender_api;
+    }
+
+    public function takeKommoToken($name)
+    {
+        $this->accountModel = Account::where('name', $name)->first();
+        return $this->accountModel->kommo_token;
+    }
+
 }
