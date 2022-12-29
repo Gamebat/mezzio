@@ -22,7 +22,7 @@ class ConfigProvider
     {
         return [
             'laminas-cli' => $this->getCliConfig(),
-            'dependencies' => $this->getDependencies(),
+            'dependencies' => $this->getDependencyConfig(),
         ];
     }
 
@@ -30,7 +30,7 @@ class ConfigProvider
     {
         return [
             'commands' => [
-                'package:command-name' => Laminas\MyCommand::class,
+                'how-time' => Laminas\MyCommand::class,
             ],
         ];
     }
@@ -51,6 +51,15 @@ class ConfigProvider
                 Handlers\SyncContactsHandler::class => Factories\SyncContactsFactory::class,
                 Handlers\SaveUnisederAPIHandler::class => Factories\SaveUnisenderAPIFactory::class,
                 Handlers\WebhookProcessingHandler::class => Factories\WebhookProcessingFactory::class,
+            ],
+        ];
+    }
+
+    public function getDependencyConfig() : array
+    {
+        return [
+            'factories' => [
+                Laminas\MyCommand::class => Factories\MyCommandFactory::class,
             ],
         ];
     }
