@@ -107,7 +107,7 @@ class Authorize
             }
             (new Logger())
                 ->setLevel('subscribe')
-                ->putData((new SubscribeWebhook())->subscribe($apiClient), 'response');
+                ->error((new SubscribeWebhook())->subscribe($apiClient), 'response');
 
         } catch (AmoCRMApiException $e) {
             die((string)$e);

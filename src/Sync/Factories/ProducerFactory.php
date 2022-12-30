@@ -13,6 +13,6 @@ class ProducerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        return new ProducerHandler();
+        return new ProducerHandler($container);
     }
 }

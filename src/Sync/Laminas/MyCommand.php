@@ -15,10 +15,7 @@ class MyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /*$date = Carbon::now()->format('H:i (m.Y)');
-        $output->writeln("Now time: ". $date);*/
-        (new TimeWorker())->execute();
-        $output->writeln('1');
+        (new TimeWorker(new BeanstalkConfig(null, true)))->execute($input, $output);
         return Command::SUCCESS;
     }
 }

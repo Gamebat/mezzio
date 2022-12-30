@@ -38,8 +38,6 @@ use Psr\Container\ContainerInterface;
  */
 
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/', App\Handler\HomePageHandler::class, 'home');
-    $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->get('/email', Sync\Handlers\UserEmailsHandler::class, 'email');
     $app->get('/users', Sync\Handlers\UserKommoHandler::class, 'users');
     $app->get('/unisender', Sync\Handlers\UnisenderContactHandler::class, 'unisender');
