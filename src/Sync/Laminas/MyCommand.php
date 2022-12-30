@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sync\Producers\Producer;
+use Sync\Workers\TimeWorker;
 
 class MyCommand extends Command
 {
@@ -13,8 +15,7 @@ class MyCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $date = Carbon::now()->format('H:i (m.Y)');
-        $output->writeln("Now time: ". $date);
+        (new TimeWorker(new BeanstalkConfig(null, true)))->execute($input, $output);
         return Command::SUCCESS;
     }
 }

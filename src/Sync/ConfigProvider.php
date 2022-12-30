@@ -22,7 +22,7 @@ class ConfigProvider
     {
         return [
             'laminas-cli' => $this->getCliConfig(),
-            'dependencies' => $this->getDependencyConfig(),
+            'dependencies' => $this->getDependencies(),
         ];
     }
 
@@ -31,6 +31,7 @@ class ConfigProvider
         return [
             'commands' => [
                 'how-time' => Laminas\MyCommand::class,
+                'work' => Workers\TimeWorker::class
             ],
         ];
     }
@@ -51,19 +52,8 @@ class ConfigProvider
                 Handlers\SyncContactsHandler::class => Factories\SyncContactsFactory::class,
                 Handlers\SaveUnisederAPIHandler::class => Factories\SaveUnisenderAPIFactory::class,
                 Handlers\WebhookProcessingHandler::class => Factories\WebhookProcessingFactory::class,
+                Handlers\ProducerHandler::class => Factories\ProducerFactory::class,
             ],
         ];
     }
-
-    public function getDependencyConfig() : array
-    {
-        return [
-            'factories' => [
-                Laminas\MyCommand::class => Factories\MyCommandFactory::class,
-            ],
-        ];
-    }
-    /**
-     * Returns the templates configuration
-     */
 }
