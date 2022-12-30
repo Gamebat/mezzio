@@ -2,12 +2,10 @@
 
 namespace Sync\Laminas;
 
-use Hopex\Simplog\Logger;
 use Pheanstalk\Pheanstalk;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Sync\AmoAPI\SubscribeWebhook;
+use Psr\Container\NotFoundExceptionInterface;
 
 class BeanstalkConfig
 {
@@ -32,7 +30,6 @@ class BeanstalkConfig
                 $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['worker'];
 
             } else {
-//                $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['producer'];
                 $this->config = $container->get('config')['beanstalk']['producer'];
             }
 

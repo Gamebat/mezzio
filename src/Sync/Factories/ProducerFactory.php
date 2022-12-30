@@ -6,7 +6,6 @@ namespace Sync\Factories;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\Handlers\AuthKommoHandler;
 use Sync\Handlers\ProducerHandler;
 
 class ProducerFactory
