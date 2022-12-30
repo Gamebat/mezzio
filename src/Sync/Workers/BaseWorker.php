@@ -12,16 +12,30 @@ use Sync\Laminas\BeanstalkConfig;
 
 abstract class BaseWorker extends Command
 {
+    /**
+     * @var Pheanstalk|null
+     */
     protected Pheanstalk $connection;
 
+    /**
+     * @var string
+     */
     protected string $queue = 'times';
 
+    /**
+     * @param BeanstalkConfig $beanstalk
+     */
     final public function __construct(BeanstalkConfig $beanstalk)
     {
         $this->connection = $beanstalk->getConnection();
         parent::__construct();
     }
 
+    /**  Запуск воркера
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         while ($job = ($this->connection)
@@ -46,6 +60,11 @@ abstract class BaseWorker extends Command
         return 0;
     }
 
+    /** Обработка ошибок
+     * @param \Throwable $exception
+     * @param Job $job
+     * @return void
+     */
     private function handleException(\Throwable $exception, Job $job): void
     {
         echo "Error Unhandled exception $exception" . PHP_EOL . $job->getData();
