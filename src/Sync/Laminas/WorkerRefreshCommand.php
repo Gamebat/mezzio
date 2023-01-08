@@ -5,9 +5,10 @@ namespace Sync\Laminas;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sync\Workers\RefreshWorker;
 use Sync\Workers\TimeWorker;
 
-class MyCommand extends Command
+class WorkerRefreshCommand extends Command
 {
     /**
      * @var string
@@ -21,7 +22,7 @@ class MyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        (new TimeWorker(new BeanstalkConfig(null, true)))->execute($input, $output);
+        (new RefreshWorker(new BeanstalkConfig(null, true)))->execute($input, $output);
         return Command::SUCCESS;
     }
 }

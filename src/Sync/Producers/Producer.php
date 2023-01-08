@@ -29,12 +29,13 @@ class Producer
      */
     public function produce($data): array
     {
-        $job = ($this->connection)
+        $job = $this->connection
             ->useTube('times')
             ->put(json_encode($data));
 
         return [
             'id' => $job->getId(),
+            'name' => 'Текущее время',
             'data' => $job->getData(),
         ];
     }

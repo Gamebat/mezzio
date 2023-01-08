@@ -2,7 +2,6 @@
 
 namespace Sync\Unisender;
 
-use Hopex\Simplog\Logger;
 use Sync\Controllers\AccountController;
 use Sync\Models\Account;
 
@@ -20,9 +19,6 @@ class SaveUnisenderAPI
         {
             return ((new AccountController())->saveUniToken($parsedBodyArray));
         } else {
-            (new Logger())
-                ->setLevel('requests')
-                ->putData($parsedBodyArray, 'params');
             return null;
         }
     }

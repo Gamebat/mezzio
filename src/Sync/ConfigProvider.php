@@ -31,7 +31,8 @@ class ConfigProvider
         return [
             'commands' => [
                 'how-time' => Laminas\MyCommand::class,
-                'work' => Workers\TimeWorker::class
+                'update-command' => Laminas\RefreshCommand::class,
+                'update-work' => Laminas\WorkerRefreshCommand::class
             ],
         ];
     }

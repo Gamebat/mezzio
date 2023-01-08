@@ -22,7 +22,8 @@ class ProducerHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse(
-            (new Producer($this->container))->produce("\nNow time: ". Carbon::now()->format('H:i (m.Y)'))
+            (new Producer($this->container))
+                ->produce("\nNow time: ". Carbon::now()->format('H:i (m.Y)'))
         );
     }
 }

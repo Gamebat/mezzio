@@ -8,6 +8,8 @@ class TimeWorker extends BaseWorker
      * @param $data
      * @return void
      */
+    protected string $queue = 'times';
+
     public function process($data): void
     {
         echo $data;

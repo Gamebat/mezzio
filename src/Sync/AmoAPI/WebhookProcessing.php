@@ -2,7 +2,6 @@
 
 namespace Sync\AmoAPI;
 
-use Hopex\Simplog\Logger;
 use Sync\Unisender\ContactAction;
 
 class WebhookProcessing
@@ -26,9 +25,7 @@ class WebhookProcessing
                 (new ContactAction())->delete($parsedBodyArray['contacts']['delete']);
             }
         } catch (\Exception $e){
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'webhook_processing');
+            die($e->getMessage());
         }
     }
 }
