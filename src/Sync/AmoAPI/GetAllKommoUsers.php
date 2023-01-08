@@ -5,7 +5,6 @@ namespace Sync\AmoAPI;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use Hopex\Simplog\Logger;
 
 class GetAllKommoUsers
 {
@@ -53,17 +52,9 @@ class GetAllKommoUsers
                         {
                             $email = $value->toArray();
 
-                            (new Logger())
-                                ->setLevel('import')
-                                ->putData($email, 'sendedEmail');
-
                             if ($email['enum_code'] === 'WORK')
                             {
                                 $this->result[$this->id]['emails'][] = $value->getValue();
-                            } else{
-                                (new Logger())
-                                    ->setLevel('errors')
-                                    ->putData([$contact->getName() => $value->getValue()], 'unsyncEmails');
                             }
 
                         }
@@ -73,9 +64,7 @@ class GetAllKommoUsers
 
             }
         } catch (AmoCRMoAuthApiException|AmoCRMApiException $e){
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'get_users');
+            die($e->getMessage());
         }
 
         return $this->result;

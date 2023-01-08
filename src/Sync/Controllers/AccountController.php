@@ -2,8 +2,11 @@
 
 namespace Sync\Controllers;
 
-use Hopex\Simplog\Logger;
+use AmoCRM\Exceptions\AmoCRMMissedTokenException;
+use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Sync\Models\Account;
 
 
@@ -59,13 +62,16 @@ class AccountController
      */
     public function saveAuth(array $tokenArray): void
     {
-        if ($this->issetAccount($tokenArray['name']))
-        {
-            $this->accountModel = Account::where('name', $tokenArray['name'])->first();
-            $this->accountModel->kommo_token = $tokenArray['kommo_token'];
-            $this->accountModel->save();
-        } else {
-            $this->accountModel->create($tokenArray);
+        try {
+            if ($this->issetAccount($tokenArray['name'])) {
+                $this->accountModel = Account::where('name', $tokenArray['name'])->first();
+                $this->accountModel->kommo_token = $tokenArray['kommo_token'];
+                $this->accountModel->save();
+            } else {
+                $this->accountModel->create($tokenArray);
+            }
+        } catch (Exception|ModelNotFoundException $e) {
+            die('saveAuth');
         }
     }
 
@@ -103,9 +109,6 @@ class AccountController
             $this->accountModel = Account::where('name', $name)->first();
             return $this->accountModel->kommo_token;
         } catch (\Exception $e) {
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'import');
             die('Пользователь не найден');
         }
     }
@@ -117,8 +120,29 @@ class AccountController
      */
     public function deleteKommoToken(string $name): void
     {
-        $account = Account::where('name', $name)->first();
-        $account->kommo_token = null;
-        $account->save();
+        $this->accountModel = Account::where('name', $name)->first();
+        $this->accountModel->kommo_token = null;
+        $this->accountModel->save();
+    }
+
+    public function freshUser($hours): ?Account
+    {
+        /*Account::chunk(50, function ($accounts) use ($hours)
+        {
+            foreach ($accounts as $account)
+            {
+                $token = json_decode($account->kommo_token, true);
+                $unixExpires = (new Carbon())->timestamp($token['expires']);
+                if (((Carbon::now())->diffInHours($unixExpires)) > $hours)
+                {
+                    return $account;
+                }
+            }
+            return null;
+        });*/
+
+        $account = $this->accountModel->where('name', 'Alex')->first();
+
+        return $account;
     }
 }

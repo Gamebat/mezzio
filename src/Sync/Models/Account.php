@@ -1,6 +1,6 @@
 <?php
 
-namespace Sync\models;
+namespace Sync\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

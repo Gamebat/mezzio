@@ -5,7 +5,6 @@ namespace Sync\AmoAPI;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiException;
 use Exception;
-use Hopex\Simplog\Logger;
 use Sync\Controllers\AccountController;
 
 class Authorize
@@ -105,9 +104,6 @@ class Authorize
                     ]
                 );
             }
-            (new Logger())
-                ->setLevel('subscribe')
-                ->error((new SubscribeWebhook())->subscribe($apiClient), 'response');
 
         } catch (AmoCRMApiException $e) {
             die((string)$e);

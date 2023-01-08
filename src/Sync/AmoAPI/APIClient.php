@@ -5,7 +5,6 @@ namespace Sync\AmoAPI;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use Hopex\Simplog\Logger;
 use League\OAuth2\Client\Token\AccessToken;
 use Sync\Controllers\AccountController;
 
@@ -38,9 +37,6 @@ class APIClient
             $check = $apiClient->contacts()->get();
             return $apiClient;
         } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException|\Exception $e){
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'generate_client');
 
             $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' .
                 $_SERVER['HTTP_HOST'] .

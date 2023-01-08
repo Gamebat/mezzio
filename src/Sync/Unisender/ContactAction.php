@@ -3,7 +3,6 @@
 namespace Sync\Unisender;
 
 use Exception;
-use Hopex\Simplog\Logger;
 
 class ContactAction
 {
@@ -30,27 +29,16 @@ class ContactAction
                                         'name' => $add['name'],
                                         'email' => $email['value']
                                     ];
-                                } else {
-                                    (new Logger())
-                                        ->setLevel('errors')
-                                        ->putData([$add['name'] => $email['value']], 'unsyncEmails');
-
                                 }
 
                             }
                         }
                     }
-                } else {
-                    (new Logger())
-                        ->setLevel('errors')
-                        ->putData($parsedBodyArray, 'no_custom_fields');
                 }
             }
             (new ImportOnAction('Alex', $this->result))->importContacts();
         } catch (Exception $e){
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'invalid_add');
+            die($e->getMessage());
         }
 
     }

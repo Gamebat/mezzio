@@ -2,7 +2,6 @@
 
 namespace Sync\Unisender;
 
-use Hopex\Simplog\Logger;
 use PHPUnit\Util\Exception;
 use Sync\Controllers\AccountController;
 use Sync\Controllers\ContactController;
@@ -92,10 +91,6 @@ class ImportOnAction
                     $unseated = $block["data[{$index}][0]"];
                     $unseatedName = $block["data[{$index}][1]"];
 
-                    (new Logger())
-                        ->setLevel('errors')
-                        ->putData([$unseatedName => $unseated], 'not_added_emails');
-
                     unset($this->toDatabase[$unseated]);
                 }
             }
@@ -143,9 +138,7 @@ class ImportOnAction
                 $this->client->importContacts($block);
             }
         } catch (\Exception $e){
-            (new Logger())
-                ->setLevel('errors')
-                ->putData($e->getMessage(), 'webhook_processing');
+            die($e->getMessage());
         }
         (new ContactController())->deleteContactDB($emails);
     }

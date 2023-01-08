@@ -20,7 +20,7 @@ abstract class BaseWorker extends Command
     /**
      * @var string
      */
-    protected string $queue = 'times';
+    protected string $queue = 'Default';
 
     /**
      * @param BeanstalkConfig $beanstalk

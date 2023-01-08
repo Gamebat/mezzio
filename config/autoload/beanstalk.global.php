@@ -8,7 +8,7 @@ return [
             'timeout' => 10,
         ],
         'worker' => [
-            'host' => 'localhost',
+            'host' => '127.0.0.1',
             'port' => 11300,
             'timeout' => 10,
         ]
