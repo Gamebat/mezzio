@@ -34,7 +34,7 @@ class APIClient
             } else {
                 throw new \Exception('Нет токена авторизации');
             }
-            $check = $apiClient->contacts()->get();
+            $check = $apiClient->getOAuthClient();
             return $apiClient;
         } catch (AmoCRMMissedTokenException|AmoCRMoAuthApiException|\Exception $e){
 

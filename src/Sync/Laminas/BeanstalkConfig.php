@@ -31,8 +31,7 @@ class BeanstalkConfig
                 $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['worker'];
 
             } else if ($container){
-                $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['producer'];
-                /*$this->config = $container->get('config')['beanstalk']['producer'];*/
+                $this->config = $container->get('config')['beanstalk']['producer'];
             } else {
                 $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['worker'];
             }

@@ -13,7 +13,7 @@ use Sync\Laminas\BeanstalkConfig;
 abstract class BaseWorker extends Command
 {
     /**
-     * @var Pheanstalk|null
+     * @var Pheanstalk
      */
     protected Pheanstalk $connection;
 

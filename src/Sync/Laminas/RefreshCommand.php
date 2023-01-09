@@ -8,7 +8,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sync\Producers\RefreshProducer;
-use Sync\Workers\RefreshWorker;
 
 class RefreshCommand extends AbstractParamAwareCommand
 {
@@ -17,6 +16,9 @@ class RefreshCommand extends AbstractParamAwareCommand
      */
     protected static $defaultDescription = 'Refresh expiring tokens';
 
+    /** Конфигурирование команды
+     * @return void
+     */
     protected function configure() : void
     {
         $this->addParam(
@@ -25,14 +27,14 @@ class RefreshCommand extends AbstractParamAwareCommand
         );
     }
 
+    /** Функции вызываемые командой
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $hours = $input->getParam('hours');
-
-        /*(new RefreshTokens($hours))->refresh();*/
-        /*(new RefreshWorker(new BeanstalkConfig(null, true)))->execute($input, $output)*/;
-        /*$output->writeln('Hours: ' . $hours);*/
-
         $output->writeln((new RefreshProducer())->produce($hours));
 
         return Command::SUCCESS;

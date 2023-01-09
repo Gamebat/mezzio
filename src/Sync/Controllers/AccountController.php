@@ -2,9 +2,6 @@
 
 namespace Sync\Controllers;
 
-use AmoCRM\Exceptions\AmoCRMMissedTokenException;
-use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -128,37 +125,13 @@ class AccountController
         $this->accountModel->save();
     }
 
-    public function freshUser($hours): ?Account
+    /** Получение пользователя со свежим токеном авторизации
+     * @return Account|null
+     */
+    public function freshUser(): ?Account
     {
-        try
-        {
-        /*Account::chunk(50, function ($accounts) use ($hours)
-        {
-            foreach ($accounts as $account)
-            {
-                $token = json_decode($account->kommo_token, true);
-
-                $unixExpires = (new Carbon())->timestamp($token['expires']);
-                if (((Carbon::now())->diffInHours($unixExpires)) <= $hours)
-                {
-                    return $account;
-                }
-            }
-            return null;
-        });*/
-
-
-        foreach (Account::all() as $account)
-        {
-            $token = json_decode($account->kommo_token, true);
-            $unixExpires = (new Carbon())->timestamp($token['expires']);
-            if (((Carbon::now())->diffInHours($unixExpires)) < $hours)
-            {
-                return $account;
-            }
-        }
-
-        return null;
+        try {
+            return $this->accountModel->where('name', 'Alex')->first();
         } catch (Exception $e) {
             die ($e->getMessage());
         }

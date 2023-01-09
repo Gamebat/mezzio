@@ -2,61 +2,70 @@
 
 namespace Sync\AmoAPI;
 
-use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\OAuth2\Client\Provider\AmoCRMException;
+use Carbon\Carbon;
 use Exception;
-use Laminas\Diactoros\Response\JsonResponse;
 use League\OAuth2\Client\Token\AccessToken;
-use League\OAuth2\Client\Token\AccessTokenInterface;
 use Sync\Controllers\AccountController;
 use Sync\Models\Account;
 
 class RefreshTokens
 {
+    /**
+     * @var int
+     */
     public int $count = 0;
+
+    /**
+     * @var Account|null
+     */
     public ?Account $account;
 
-    public function __construct($hours)
+    public function __construct()
     {
-        $this->account = (new AccountController())->freshUser($hours);
+        $this->account = (new AccountController())->freshUser();
     }
 
-    public function refresh()
+    /** Обновление токенов авторизации
+     * @param $hours
+     * @return int|null
+     */
+    public function refresh($hours): ?int
     {
         try {
-            $params = (include "./config/api.config.php");
-            $apiClient = (new AmoCRMApiClient(
-                $params['clientId'],
-                $params['clientSecret'],
-                $params['redirectUri']));
 
+            $apiClient = (new APIClient())->generateApiClient($this->account->name);
+            $accessToken = (new AccessToken(json_decode($this->account->kommo_token,true)));
 
-            $tokenArray = $this->account->kommo_token;
-            $accessToken = new AccessToken(json_decode($tokenArray, true));
-            $apiClient->setAccessToken($accessToken)
-                ->setAccountBaseDomain(($accessToken->getValues())['base_domain']);
+            $newToken = $apiClient
+                ->getOAuthClient()
+                ->getAccessTokenByRefreshToken($accessToken);
 
-            $newToken = $apiClient->getOAuthClient()->getAccessTokenByRefreshToken($accessToken);
-
-            Account::chunk(50, function ($accounts) use ($newToken, $apiClient)
+            Account::chunk(50, function ($accounts) use ($newToken, $apiClient, $hours)
             {
                 foreach ($accounts as $account)
                 {
-                    $this->count++;
-                    (new AccountController())->saveAuth([
-                            'name' => $account->name,
-                            'kommo_token' => json_encode([
-                                'access_token' => $newToken->getToken(),
-                                'refresh_token' => $newToken->getRefreshToken(),
-                                'expires' => $newToken->getExpires(),
-                                'base_domain' => $apiClient->getAccountBaseDomain()
-                            ])
-                        ]
-                    );
+                    $token = json_decode($account->kommo_token, true);
+                    $unixExpires = (new Carbon())->timestamp($token['expires']);
+                    if (((Carbon::now())->diffInHours($unixExpires)) <= $hours)
+                    {
+                        $this->count++;
+                        (new AccountController())->saveAuth([
+                                'name' => $account->name,
+                                'kommo_token' => json_encode([
+                                    'access_token' => $newToken->getToken(),
+                                    'refresh_token' => $newToken->getRefreshToken(),
+                                    'expires' => $newToken->getExpires(),
+                                    'base_domain' => $apiClient->getAccountBaseDomain()
+                                ])
+                            ]
+                        );
+                    }
                 }
             });
+
             return $this->count;
         } catch (Exception|AmoCRMException|AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {
             die($e->getMessage());
