@@ -46,5 +46,4 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/unikey', Sync\Handlers\SaveUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
     $app->post('/webhooks', Sync\Handlers\WebhookProcessingHandler::class, 'webhooks');
     $app->get('/prod', Sync\Handlers\ProducerHandler::class, 'prod');
-
 };

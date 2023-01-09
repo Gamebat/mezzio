@@ -6,7 +6,7 @@ return [
     'driver' => 'mysql',
     'username' => 'admin',
     'password' => '111111',
-    'host' => 'application-mysql',
+    'host' => '127.0.0.1',
     'database' => 'app_db',
     'port' => 3306,
     'charset' => 'utf8',

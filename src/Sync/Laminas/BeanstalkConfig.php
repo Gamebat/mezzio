@@ -3,9 +3,7 @@
 namespace Sync\Laminas;
 
 use Pheanstalk\Pheanstalk;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class BeanstalkConfig
 {
@@ -24,25 +22,12 @@ class BeanstalkConfig
      */
     public function __construct(?ContainerInterface $container, bool $isSli = false)
     {
-
-        try {
-            if($isSli)
-            {
-                $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['worker'];
-
-            } else if ($container){
-                $this->config = $container->get('config')['beanstalk']['producer'];
-            } else {
-                $this->config = (include "./config/autoload/beanstalk.global.php")['beanstalk']['worker'];
-            }
-
-            $this->connection = Pheanstalk::create(
-                $this->config['host'],
-                $this->config['port'],
-                $this->config['timeout']
-            );
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-            exit($e->getMessage());
+        if($isSli) {
+            $this->connection = WorkerConnection::instance();
+        } else if ($container) {
+            $this->connection = ProducerConnection::instance($container);
+        } else {
+            $this->connection = WorkerConnection::instance();
         }
     }
 
