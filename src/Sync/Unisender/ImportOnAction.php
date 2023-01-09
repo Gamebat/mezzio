@@ -2,6 +2,8 @@
 
 namespace Sync\Unisender;
 
+use Carbon\Carbon;
+use Hopex\Simplog\Logger;
 use PHPUnit\Util\Exception;
 use Sync\Controllers\AccountController;
 use Sync\Controllers\ContactController;
@@ -90,6 +92,16 @@ class ImportOnAction
                     $index = $value['index'];
                     $unseated = $block["data[{$index}][0]"];
                     $unseatedName = $block["data[{$index}][1]"];
+
+                    (new Logger())
+                        ->setDirectoryPermissions(0775)
+                        ->setLevel('emails')
+                        ->setFileName('uncorrected')
+                        ->custom([
+                            'date' => Carbon::now()->toTimeString(),
+                            'name' => $unseatedName,
+                            'email' => $unseated
+                        ]);
 
                     unset($this->toDatabase[$unseated]);
                 }

@@ -2,6 +2,8 @@
 
 namespace Sync\Unisender;
 
+use Carbon\Carbon;
+use Hopex\Simplog\Logger;
 use PHPUnit\Util\Exception;
 use Sync\AmoAPI\APIClient;
 use Sync\AmoAPI\GetAllKommoUsers;
@@ -97,6 +99,16 @@ class ImportContactsToUnisender
                     $index = $value['index'];
                     $unseted = $block["data[{$index}][0]"];
                     $unsetedName = $block["data[{$index}][1]"];
+
+                    (new Logger())
+                        ->setDirectoryPermissions(0775)
+                        ->setLevel('emails')
+                        ->setFileName('uncorrected')
+                        ->custom([
+                            'date' => Carbon::now()->toTimeString(),
+                            'name' => $unsetedName,
+                            'email' => $unseted
+                        ]);
 
                     unset($this->toDatabase[$unseted]);
                 }
