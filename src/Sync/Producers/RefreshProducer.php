@@ -4,7 +4,6 @@ namespace Sync\Producers;
 
 use Carbon\Carbon;
 use Pheanstalk\Pheanstalk;
-use Psr\Container\ContainerInterface;
 use Sync\Laminas\BeanstalkConfig;
 
 class RefreshProducer
@@ -26,6 +25,7 @@ class RefreshProducer
      */
     public function produce(int $hours): array
     {
+
         try {
             $job = ($this->connection)
                 ->useTube('refresh')

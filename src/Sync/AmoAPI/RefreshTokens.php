@@ -5,7 +5,6 @@ namespace Sync\AmoAPI;
 use AmoCRM\Exceptions\AmoCRMMissedTokenException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\OAuth2\Client\Provider\AmoCRMException;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use League\OAuth2\Client\Token\AccessToken;

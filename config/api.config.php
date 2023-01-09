@@ -8,4 +8,3 @@ return [
     'clientSecret' => 'YJqakV2iRNnSWSWZhNJiUQEBGXVTmpgQ20G1nY18XAFBgogdS6ixpE2TlymBAS2e',
     'redirectUri' => 'https://788e-212-46-197-210.eu.ngrok.io/auth',
 ];
-
