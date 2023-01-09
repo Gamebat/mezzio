@@ -5,21 +5,15 @@ namespace Sync\Producers;
 use Carbon\Carbon;
 use Pheanstalk\Pheanstalk;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sync\Laminas\BeanstalkConfig;
 
 class RefreshProducer
 {
     /**
-     * @var Pheanstalk|null
+     * @var Pheanstalk
      */
     public Pheanstalk $connection;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct()
     {
         $this->connection = (new BeanstalkConfig(null, false))->getConnection();
@@ -30,7 +24,7 @@ class RefreshProducer
      * @param $data
      * @return array
      */
-    public function produce($hours)
+    public function produce(int $hours): array
     {
         try {
             $job = ($this->connection)

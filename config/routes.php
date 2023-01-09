@@ -45,7 +45,6 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/auth', Sync\Handlers\AuthKommoHandler::class, ['GET', 'POST'], 'auth');
     $app->route('/unikey', Sync\Handlers\SaveUnisederAPIHandler::class, ['GET', 'POST'], 'unikey');
     $app->post('/webhooks', Sync\Handlers\WebhookProcessingHandler::class, 'webhooks');
-    $app->route('/prod', Sync\Handlers\ProducerHandler::class, ['GET', 'POST'], 'prod');
-    $app->route('/test', Sync\Handlers\TestHandler::class, ['GET', 'POST'], 'test');
+    $app->get('/prod', Sync\Handlers\ProducerHandler::class, 'prod');
 
 };

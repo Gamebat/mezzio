@@ -20,6 +20,6 @@ class RefreshWorker extends BaseWorker
     public function process($data): void
     {
         $result = (new RefreshTokens())->refresh((int) $data);
-        echo "\n" . $result . " аккаунтов успешно обновлено";
+        echo "\n" . $result . " - аккаунтов успешно обновлено";
     }
 }

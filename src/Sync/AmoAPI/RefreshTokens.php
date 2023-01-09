@@ -29,10 +29,10 @@ class RefreshTokens
     }
 
     /** Обновление токенов авторизации
-     * @param $hours
+     * @param int $hours
      * @return int|null
      */
-    public function refresh($hours): ?int
+    public function refresh(int $hours): ?int
     {
         try {
 
@@ -43,28 +43,22 @@ class RefreshTokens
                 ->getOAuthClient()
                 ->getAccessTokenByRefreshToken($accessToken);
 
-            Account::chunk(50, function ($accounts) use ($newToken, $apiClient, $hours)
+            $accounts = (new Account())->hasExpired($hours);
+            foreach ($accounts as $account)
             {
-                foreach ($accounts as $account)
-                {
-                    $token = json_decode($account->kommo_token, true);
-                    $unixExpires = (new Carbon())->timestamp($token['expires']);
-                    if (((Carbon::now())->diffInHours($unixExpires)) <= $hours)
-                    {
-                        $this->count++;
-                        (new AccountController())->saveAuth([
-                                'name' => $account->name,
-                                'kommo_token' => json_encode([
-                                    'access_token' => $newToken->getToken(),
-                                    'refresh_token' => $newToken->getRefreshToken(),
-                                    'expires' => $newToken->getExpires(),
-                                    'base_domain' => $apiClient->getAccountBaseDomain()
-                                ])
-                            ]
-                        );
-                    }
-                }
-            });
+                    $this->count++;
+                    (new AccountController())->saveAuth([
+                            'name' => $account->name,
+                            'kommo_token' => json_encode([
+                                'access_token' => $newToken->getToken(),
+                                'refresh_token' => $newToken->getRefreshToken(),
+                                'expires' => $newToken->getExpires(),
+                                'base_domain' => $apiClient->getAccountBaseDomain()
+                            ])
+                        ]
+                    );
+
+            }
 
             return $this->count;
         } catch (Exception|AmoCRMException|AmoCRMMissedTokenException|AmoCRMoAuthApiException $e) {

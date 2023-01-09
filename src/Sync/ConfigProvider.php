@@ -54,7 +54,6 @@ class ConfigProvider
                 Handlers\SaveUnisederAPIHandler::class => Factories\SaveUnisenderAPIFactory::class,
                 Handlers\WebhookProcessingHandler::class => Factories\WebhookProcessingFactory::class,
                 Handlers\ProducerHandler::class => Factories\ProducerFactory::class,
-                Handlers\TestHandler::class => Factories\TestFactory::class,
             ],
         ];
     }

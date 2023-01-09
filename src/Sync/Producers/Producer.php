@@ -10,7 +10,7 @@ use Sync\Laminas\BeanstalkConfig;
 class Producer
 {
     /**
-     * @var Pheanstalk|null
+     * @var Pheanstalk
      */
     public Pheanstalk $connection;
 

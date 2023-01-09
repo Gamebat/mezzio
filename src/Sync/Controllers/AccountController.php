@@ -2,13 +2,12 @@
 
 namespace Sync\Controllers;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Sync\Models\Account;
-
 
 class AccountController
 {
